@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="lun-Sg-0Ok">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Collection View Controller-->
+        <!--时刻-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="CollectionViewController" customModule="Album" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MomentViewController" customModule="Album" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -17,20 +17,97 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kH7-wz-rKD">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="L9u-Ct-xCP">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4jf-83-OrA" customClass="MomentCollectionLayout" customModule="Album" customModuleProvider="target">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="50" height="50"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="uCa-vn-jiz" customClass="MomentCell" customModule="Album" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="114" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Dwn-Ng-nrT">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="Dwn-Ng-nrT" secondAttribute="bottom" id="OKW-Vg-g6T"/>
+                                            <constraint firstAttribute="trailing" secondItem="Dwn-Ng-nrT" secondAttribute="trailing" id="u6y-fW-ycw"/>
+                                            <constraint firstItem="Dwn-Ng-nrT" firstAttribute="leading" secondItem="uCa-vn-jiz" secondAttribute="leading" id="x72-Ex-Vbg"/>
+                                            <constraint firstItem="Dwn-Ng-nrT" firstAttribute="top" secondItem="uCa-vn-jiz" secondAttribute="top" id="xb9-LF-7cB"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="imageView" destination="Dwn-Ng-nrT" id="4LU-SN-1BY"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="TimeResableView" id="eue-a0-iRX" customClass="MomentReusableView" customModule="Album" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="64" width="600" height="50"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <tabBar hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Do-Lh-bZy">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <items/>
+                                        </tabBar>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dha-uY-kOe">
+                                            <rect key="frame" x="8" y="16" width="36" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iTZ-Zq-1xC">
+                                            <rect key="frame" x="559" y="17" width="33" height="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <constraints>
+                                        <constraint firstItem="dha-uY-kOe" firstAttribute="leading" secondItem="eue-a0-iRX" secondAttribute="leading" constant="8" id="F5J-ZB-ltS"/>
+                                        <constraint firstItem="iTZ-Zq-1xC" firstAttribute="trailing" secondItem="eue-a0-iRX" secondAttribute="trailingMargin" id="c5G-31-CAz"/>
+                                        <constraint firstItem="dha-uY-kOe" firstAttribute="centerY" secondItem="eue-a0-iRX" secondAttribute="centerY" id="et9-3I-ibW"/>
+                                        <constraint firstItem="7Do-Lh-bZy" firstAttribute="leading" secondItem="eue-a0-iRX" secondAttribute="leading" id="hhH-4B-4o1"/>
+                                        <constraint firstAttribute="bottom" secondItem="7Do-Lh-bZy" secondAttribute="bottom" id="lgZ-sj-YZN"/>
+                                        <constraint firstAttribute="trailing" secondItem="7Do-Lh-bZy" secondAttribute="trailing" id="ocQ-Gx-mPv"/>
+                                        <constraint firstItem="iTZ-Zq-1xC" firstAttribute="centerY" secondItem="eue-a0-iRX" secondAttribute="centerY" id="vXQ-Hq-XKN"/>
+                                        <constraint firstItem="7Do-Lh-bZy" firstAttribute="top" secondItem="eue-a0-iRX" secondAttribute="top" id="xZM-Ze-7Ue"/>
+                                    </constraints>
+                                    <connections>
+                                        <outlet property="LeftDescLabel" destination="dha-uY-kOe" id="XRX-7h-Clb"/>
+                                        <outlet property="RightDescLabel" destination="iTZ-Zq-1xC" id="U0l-QQ-WeD"/>
+                                        <outlet property="tabBarView" destination="7Do-Lh-bZy" id="DRu-ud-wNE"/>
+                                    </connections>
+                                </collectionReusableView>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="Mwj-4r-UM0"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="1zn-yh-pQZ"/>
+                                </connections>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="kH7-wz-rKD" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="GOt-RY-LYB"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="kH7-wz-rKD" secondAttribute="bottom" id="Lq1-hA-3Cs"/>
-                            <constraint firstAttribute="trailing" secondItem="kH7-wz-rKD" secondAttribute="trailing" id="avF-je-0Vp"/>
-                            <constraint firstItem="kH7-wz-rKD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="dH7-b5-nor"/>
+                            <constraint firstItem="L9u-Ct-xCP" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="2Ci-4y-bRh"/>
+                            <constraint firstAttribute="bottom" secondItem="L9u-Ct-xCP" secondAttribute="bottom" id="SKu-r1-cwH"/>
+                            <constraint firstItem="L9u-Ct-xCP" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="awr-4k-hgx"/>
+                            <constraint firstAttribute="trailing" secondItem="L9u-Ct-xCP" secondAttribute="trailing" id="itf-PF-XCf"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="6Oe-Sk-4uX"/>
+                    <navigationItem key="navigationItem" title="时刻" id="6Oe-Sk-4uX"/>
+                    <connections>
+                        <outlet property="collectionView" destination="L9u-Ct-xCP" id="eDY-0g-IY4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -128,10 +205,10 @@
             </objects>
             <point key="canvasLocation" x="1364" y="1337"/>
         </scene>
-        <!--Collection View Controller-->
+        <!--View Controller-->
         <scene sceneID="ZJv-lt-OQv">
             <objects>
-                <viewController id="62r-2m-Vnl" customClass="CollectionViewController" customModule="Album" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="62r-2m-Vnl" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0FF-YB-JSd"/>
                         <viewControllerLayoutGuide type="bottom" id="4tK-3q-DEs"/>
