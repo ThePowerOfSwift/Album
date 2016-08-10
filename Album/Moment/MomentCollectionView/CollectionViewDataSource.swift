@@ -71,25 +71,7 @@ extension MomentViewController:UICollectionViewDataSource{
         
         if let collection = self.FetchResult.objectAtIndex(indexPath.section) as? PHAssetCollection{
             
-            let assetsFetchResult = PHAsset.SoreCreateTime(collection)
-            
-            let asset = assetsFetchResult.objectAtIndex(indexPath.item) as! PHAsset
-            
-            cell.representedAssetIdentifier = asset.localIdentifier
-            
-            let options = PHImageRequestOptions()
-            
-            options.networkAccessAllowed = true
-            options.resizeMode = PHImageRequestOptionsResizeMode.Exact
-            options.deliveryMode = PHImageRequestOptionsDeliveryMode.Opportunistic
-            
-            imageManager.requestImageForAsset(asset, size: cell.frame.size, resultHandler: { (image, _) in
-                
-                if (cell.representedAssetIdentifier == asset.localIdentifier) {
-                    
-                    cell.imageView.image = image
-                }
-            })
+            cell.setPHAsset(imageManager, asset: PHAsset.SoreCreateTime(collection).objectAtIndex(indexPath.item) as! PHAsset)
         }
         
         return cell
@@ -100,6 +82,12 @@ extension MomentViewController:UICollectionViewDataSource{
         
         let reusableView = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: "TimeResableView", forIndexPath: indexPath) as! MomentReusableView
         
+        if indexPath.section == 0 {
+        
+            reusableView.tabBarView.hidden = false
+            reusableView.backgroundColor = UIColor.clearColor()
+        }
+        
         if let collection = self.FetchResult.objectAtIndex(indexPath.section) as? PHAssetCollection{
             
             reusableView.setPHAssetCollection(collection)
@@ -108,9 +96,7 @@ extension MomentViewController:UICollectionViewDataSource{
                 
                 if let attribs = self.collectionView.layoutAttributesForItemAtIndexPath(indexPath){
                     
-                    
                     let topOfHeader = CGPoint(x: 0, y: attribs.frame.origin.y - (self.collectionView.collectionViewLayout as! MomentCollectionLayout).naviHeight - 50)
-                    
                     
                     self.collectionView.setContentOffset(topOfHeader, animated: true)
                 }

@@ -99,6 +99,7 @@ class MomentCollectionLayout:UICollectionViewFlowLayout{
                 let headerMissingY = CGRectGetMaxY(lastItemAttributes.frame) + sectionInset.bottom - rect.size.height;
                 //给rect的y赋新值，因为在最后消失的临界点要跟谁消失，所以取小
                 rect.origin.y=min(maxY, headerMissingY)
+                
                 //给header的结构信息的frame重新赋值
                 attributes.frame=rect
                 //如果按照正常情况下,header离开屏幕被系统回收，而header的层次关系又与cell相等，如果不去理会，会出现cell在header上面的情况

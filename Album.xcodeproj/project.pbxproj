@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9370D0482E9D086BABEA8814 /* Pods_Album.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA23337177BD84993F4AA9E /* Pods_Album.framework */; };
 		AE5B989D1CCF3F6500444F42 /* NSDateEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B989C1CCF3F6500444F42 /* NSDateEx.swift */; };
 		AE5B989F1CCF586900444F42 /* Curly.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B989E1CCF586900444F42 /* Curly.swift */; };
 		AE5B98A51CCF735400444F42 /* MomentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98A11CCF735400444F42 /* MomentCell.swift */; };
@@ -16,6 +17,7 @@
 		AE5B98AA1CCF737D00444F42 /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */; };
 		AE5B98AC1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98AB1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift */; };
 		AE5B98AE1CCF742100444F42 /* CollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98AD1CCF742100444F42 /* CollectionViewDelegate.swift */; };
+		AED6A0FA1D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6A0F91D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift */; };
 		AEDEFE9F1CCF17670042F75F /* ExtensionUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDEFE9E1CCF17670042F75F /* ExtensionUtil.swift */; };
 		AEDF788B1CCE242700FACFCB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF788A1CCE242700FACFCB /* AppDelegate.swift */; };
 		AEDF788D1CCE242700FACFCB /* InspectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF788C1CCE242700FACFCB /* InspectionViewController.swift */; };
@@ -26,6 +28,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0ABB9EF8D2247FF4107C43C3 /* Pods-Album.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.release.xcconfig"; path = "Pods/Target Support Files/Pods-Album/Pods-Album.release.xcconfig"; sourceTree = "<group>"; };
+		3CA23337177BD84993F4AA9E /* Pods_Album.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Album.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		812EEA70BE3C5E02AAFDF338 /* Pods-Album.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Album/Pods-Album.debug.xcconfig"; sourceTree = "<group>"; };
 		AE5B989C1CCF3F6500444F42 /* NSDateEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateEx.swift; sourceTree = "<group>"; };
 		AE5B989E1CCF586900444F42 /* Curly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curly.swift; sourceTree = "<group>"; };
 		AE5B98A11CCF735400444F42 /* MomentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MomentCell.swift; sourceTree = "<group>"; };
@@ -35,6 +40,7 @@
 		AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
 		AE5B98AB1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegateFlowLayout.swift; sourceTree = "<group>"; };
 		AE5B98AD1CCF742100444F42 /* CollectionViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegate.swift; sourceTree = "<group>"; };
+		AED6A0F91D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPerviewViewController.swift; sourceTree = "<group>"; };
 		AEDEFE9E1CCF17670042F75F /* ExtensionUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionUtil.swift; sourceTree = "<group>"; };
 		AEDF78871CCE242700FACFCB /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEDF788A1CCE242700FACFCB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9370D0482E9D086BABEA8814 /* Pods_Album.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +78,14 @@
 			path = MomentCollectionView;
 			sourceTree = "<group>";
 		};
+		AED6A0F81D5B3B4D00A6CFD5 /* Brower */ = {
+			isa = PBXGroup;
+			children = (
+				AED6A0F91D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift */,
+			);
+			path = Brower;
+			sourceTree = "<group>";
+		};
 		AEDEFE971CCF14C00042F75F /* Moment */ = {
 			isa = PBXGroup;
 			children = (
@@ -85,6 +100,8 @@
 				AEDF789C1CCE25E900FACFCB /* Resources */,
 				AEDF78891CCE242700FACFCB /* Album */,
 				AEDF78881CCE242700FACFCB /* Products */,
+				D56B57BA79CE783E478C8B3D /* Pods */,
+				DCA11D701C2762D6CC5C0F07 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,6 +116,7 @@
 		AEDF78891CCE242700FACFCB /* Album */ = {
 			isa = PBXGroup;
 			children = (
+				AED6A0F81D5B3B4D00A6CFD5 /* Brower */,
 				AEDEFE971CCF14C00042F75F /* Moment */,
 				AEDF788A1CCE242700FACFCB /* AppDelegate.swift */,
 				AEDF788C1CCE242700FACFCB /* InspectionViewController.swift */,
@@ -121,6 +139,23 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		D56B57BA79CE783E478C8B3D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				812EEA70BE3C5E02AAFDF338 /* Pods-Album.debug.xcconfig */,
+				0ABB9EF8D2247FF4107C43C3 /* Pods-Album.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		DCA11D701C2762D6CC5C0F07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3CA23337177BD84993F4AA9E /* Pods_Album.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -128,9 +163,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AEDF78991CCE242700FACFCB /* Build configuration list for PBXNativeTarget "Album" */;
 			buildPhases = (
+				42EA8D8CB49089E40CF81FFA /* [CP] Check Pods Manifest.lock */,
 				AEDF78831CCE242700FACFCB /* Sources */,
 				AEDF78841CCE242700FACFCB /* Frameworks */,
 				AEDF78851CCE242700FACFCB /* Resources */,
+				B737B0ECDE558760E3987DA0 /* [CP] Embed Pods Frameworks */,
+				E6820244A368DA92C48C8831 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -188,6 +226,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		42EA8D8CB49089E40CF81FFA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B737B0ECDE558760E3987DA0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Album/Pods-Album-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E6820244A368DA92C48C8831 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Album/Pods-Album-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		AEDF78831CCE242700FACFCB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -205,6 +291,7 @@
 				AEDEFE9F1CCF17670042F75F /* ExtensionUtil.swift in Sources */,
 				AE5B98A51CCF735400444F42 /* MomentCell.swift in Sources */,
 				AEDF789E1CCE261000FACFCB /* PhotoAuthProtocol.swift in Sources */,
+				AED6A0FA1D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift in Sources */,
 				AEDF788B1CCE242700FACFCB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,6 +405,7 @@
 		};
 		AEDF789A1CCE242700FACFCB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 812EEA70BE3C5E02AAFDF338 /* Pods-Album.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -325,7 +413,7 @@
 				INFOPLIST_FILE = Album/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Eyepetizer.Album;
+				PRODUCT_BUNDLE_IDENTIFIER = aimobier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -333,6 +421,7 @@
 		};
 		AEDF789B1CCE242700FACFCB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0ABB9EF8D2247FF4107C43C3 /* Pods-Album.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -340,7 +429,7 @@
 				INFOPLIST_FILE = Album/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Eyepetizer.Album;
+				PRODUCT_BUNDLE_IDENTIFIER = aimobier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
