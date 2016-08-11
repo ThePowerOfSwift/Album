@@ -30,9 +30,15 @@ class MomentViewController: UIViewController {
         self.FetchResult = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.Moment, subtype: PHAssetCollectionSubtype.Any, options: sortOptions)
     }
     
+    private var isFirst = true
+    
     override func viewWillAppear(animated: Bool) {
         
         super.viewWillAppear(animated)
+        
+        if !isFirst { return }
+        
+        isFirst = false
         
         dispatch_async(dispatch_get_main_queue()) { 
             

@@ -67,6 +67,10 @@ class PhotoPerviewViewController: UIViewController {
         imageTap.numberOfTapsRequired = 1
         self.view.addGestureRecognizer(imageTap)
         
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, closure: { 
+            
+        })
+        
         self.reloadData()
     }
     
