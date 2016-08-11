@@ -17,7 +17,10 @@
 		AE5B98AA1CCF737D00444F42 /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */; };
 		AE5B98AC1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98AB1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift */; };
 		AE5B98AE1CCF742100444F42 /* CollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98AD1CCF742100444F42 /* CollectionViewDelegate.swift */; };
-		AED6A0FA1D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6A0F91D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift */; };
+		AE71001D1D5C4DE60038CA47 /* CustomTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE71001C1D5C4DE60038CA47 /* CustomTransitioning.swift */; };
+		AEDBF7531D5C23DB00E90762 /* PhotoPerviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBF7511D5C23DB00E90762 /* PhotoPerviewViewController.swift */; };
+		AEDBF7551D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBF7541D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift */; };
+		AEDBF7571D5C26CB00E90762 /* PHImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBF7561D5C26CB00E90762 /* PHImageLoader.swift */; };
 		AEDEFE9F1CCF17670042F75F /* ExtensionUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDEFE9E1CCF17670042F75F /* ExtensionUtil.swift */; };
 		AEDF788B1CCE242700FACFCB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF788A1CCE242700FACFCB /* AppDelegate.swift */; };
 		AEDF788D1CCE242700FACFCB /* InspectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDF788C1CCE242700FACFCB /* InspectionViewController.swift */; };
@@ -40,7 +43,10 @@
 		AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
 		AE5B98AB1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegateFlowLayout.swift; sourceTree = "<group>"; };
 		AE5B98AD1CCF742100444F42 /* CollectionViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegate.swift; sourceTree = "<group>"; };
-		AED6A0F91D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPerviewViewController.swift; sourceTree = "<group>"; };
+		AE71001C1D5C4DE60038CA47 /* CustomTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTransitioning.swift; sourceTree = "<group>"; };
+		AEDBF7511D5C23DB00E90762 /* PhotoPerviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPerviewViewController.swift; sourceTree = "<group>"; };
+		AEDBF7541D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPerviewDetailViewController.swift; sourceTree = "<group>"; };
+		AEDBF7561D5C26CB00E90762 /* PHImageLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PHImageLoader.swift; sourceTree = "<group>"; };
 		AEDEFE9E1CCF17670042F75F /* ExtensionUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtensionUtil.swift; sourceTree = "<group>"; };
 		AEDF78871CCE242700FACFCB /* Album.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Album.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEDF788A1CCE242700FACFCB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -71,8 +77,8 @@
 				AE5B98A11CCF735400444F42 /* MomentCell.swift */,
 				AE5B98A21CCF735400444F42 /* MomentCollectionLayout.swift */,
 				AE5B98A31CCF735400444F42 /* MomentReusableView.swift */,
-				AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */,
 				AE5B98AB1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift */,
+				AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */,
 				AE5B98AD1CCF742100444F42 /* CollectionViewDelegate.swift */,
 			);
 			path = MomentCollectionView;
@@ -81,9 +87,27 @@
 		AED6A0F81D5B3B4D00A6CFD5 /* Brower */ = {
 			isa = PBXGroup;
 			children = (
-				AED6A0F91D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift */,
+				AEDBF7501D5C23DB00E90762 /* BrowerViewController */,
+				AEDBF7521D5C23DB00E90762 /* DetailViewController */,
 			);
 			path = Brower;
+			sourceTree = "<group>";
+		};
+		AEDBF7501D5C23DB00E90762 /* BrowerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AEDBF7511D5C23DB00E90762 /* PhotoPerviewViewController.swift */,
+				AE71001C1D5C4DE60038CA47 /* CustomTransitioning.swift */,
+			);
+			path = BrowerViewController;
+			sourceTree = "<group>";
+		};
+		AEDBF7521D5C23DB00E90762 /* DetailViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AEDBF7541D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift */,
+			);
+			path = DetailViewController;
 			sourceTree = "<group>";
 		};
 		AEDEFE971CCF14C00042F75F /* Moment */ = {
@@ -135,6 +159,7 @@
 				AEDEFE9E1CCF17670042F75F /* ExtensionUtil.swift */,
 				AE5B989C1CCF3F6500444F42 /* NSDateEx.swift */,
 				AE5B989E1CCF586900444F42 /* Curly.swift */,
+				AEDBF7561D5C26CB00E90762 /* PHImageLoader.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -279,9 +304,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AEDBF7571D5C26CB00E90762 /* PHImageLoader.swift in Sources */,
 				AE5B98A71CCF735400444F42 /* MomentReusableView.swift in Sources */,
 				AE5B98AA1CCF737D00444F42 /* CollectionViewDataSource.swift in Sources */,
 				AE5B989F1CCF586900444F42 /* Curly.swift in Sources */,
+				AE71001D1D5C4DE60038CA47 /* CustomTransitioning.swift in Sources */,
 				AE5B98A81CCF735400444F42 /* MomentViewController.swift in Sources */,
 				AE5B98A61CCF735400444F42 /* MomentCollectionLayout.swift in Sources */,
 				AE5B98AC1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift in Sources */,
@@ -291,8 +318,9 @@
 				AEDEFE9F1CCF17670042F75F /* ExtensionUtil.swift in Sources */,
 				AE5B98A51CCF735400444F42 /* MomentCell.swift in Sources */,
 				AEDF789E1CCE261000FACFCB /* PhotoAuthProtocol.swift in Sources */,
-				AED6A0FA1D5B3B7E00A6CFD5 /* PhotoPerviewViewController.swift in Sources */,
+				AEDBF7531D5C23DB00E90762 /* PhotoPerviewViewController.swift in Sources */,
 				AEDF788B1CCE242700FACFCB /* AppDelegate.swift in Sources */,
+				AEDBF7551D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

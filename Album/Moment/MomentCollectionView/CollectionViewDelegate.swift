@@ -11,6 +11,14 @@ import Photos
 
 extension MomentViewController:UICollectionViewDelegate{
     
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        let viewC = PhotoPerviewViewController(pageIndex: indexPath, momentViewController: self)
+        
+        self.navigationController?.pushViewController(viewC, animated: true)
+    }
+    
+    
     func scrollViewDidScroll(scrollView: UIScrollView) {
         
         self.SettingHeaderBlur(scrollView)

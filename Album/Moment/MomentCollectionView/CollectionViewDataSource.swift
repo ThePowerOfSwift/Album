@@ -9,37 +9,7 @@
 import UIKit
 import Photos
 
-private extension PHAsset{
 
-    class func SoreCreateTime(collection:PHAssetCollection) -> PHFetchResult{
-    
-        let sortOptions = PHFetchOptions()
-        sortOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        return PHAsset.fetchAssetsInAssetCollection(collection, options: sortOptions)
-    }
-}
-
-private extension CGSize{
-
-    func byScale(scale:CGFloat) -> CGSize{
-    
-        return CGSize(width: self.width*scale, height: self.height*scale)
-    }
-}
-
-extension PHCachingImageManager{
-
-    func requestImageForAsset(asset:PHAsset,size:CGSize,resultHandler: (UIImage?, [NSObject : AnyObject]?) -> Void){
-    
-        let options = PHImageRequestOptions()
-        
-        options.networkAccessAllowed = true
-        options.resizeMode = PHImageRequestOptionsResizeMode.Exact
-        options.deliveryMode = PHImageRequestOptionsDeliveryMode.Opportunistic
-        
-        self.requestImageForAsset(asset, targetSize: size.byScale(UIScreen.mainScreen().scale), contentMode: .AspectFill, options: options, resultHandler: resultHandler)
-    }
-}
 
 extension MomentViewController:UICollectionViewDataSource{
     
@@ -49,8 +19,6 @@ extension MomentViewController:UICollectionViewDataSource{
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        
-        
         
         return self.FetchResult.count
     }

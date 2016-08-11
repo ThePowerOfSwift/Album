@@ -30,6 +30,15 @@ class MomentViewController: UIViewController {
         self.FetchResult = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.Moment, subtype: PHAssetCollectionSubtype.Any, options: sortOptions)
     }
     
+    override func viewWillAppear(animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        
+        dispatch_async(dispatch_get_main_queue()) { 
+            
+            self.collectionView.scrollToBottom(false)
+        }
+    }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         
