@@ -73,9 +73,9 @@
 		AE4EB0151D5D74D600523A48 /* SmartAlbum */ = {
 			isa = PBXGroup;
 			children = (
-				AE4EB0281D5D86EE00523A48 /* SmartDetailViewController */,
 				AE4EB0161D5D74E700523A48 /* SmartAlbumViewController.swift */,
 				AE4EB0261D5D77DE00523A48 /* AlbumTableViewCell.swift */,
+				AE4EB0281D5D86EE00523A48 /* SmartDetailViewController */,
 			);
 			path = SmartAlbum;
 			sourceTree = "<group>";

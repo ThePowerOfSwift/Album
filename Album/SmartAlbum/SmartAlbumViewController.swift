@@ -32,22 +32,39 @@ class SmartAlbumViewController: UIViewController {
         
         sortOptions.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: true)]
         
-        let results = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.SmartAlbum, subtype: PHAssetCollectionSubtype.Any, options: sortOptions)
         
-        guard let copyResults = results.objectsAtIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: results.count))) as? [PHAssetCollection] else { return }
+        let SmartAlbumResults = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.SmartAlbum, subtype: PHAssetCollectionSubtype.Any, options: sortOptions)
+        let AlbumResults = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.Album, subtype: PHAssetCollectionSubtype.Any, options: sortOptions)
         
-        let newResults = NSMutableArray(array: copyResults)
+        guard let CopyAlbumResults = AlbumResults.objectsAtIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: AlbumResults.count))) as? [PHAssetCollection] else { return }
+        guard let CopySmartAlbumResults = SmartAlbumResults.objectsAtIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: SmartAlbumResults.count))) as? [PHAssetCollection] else { return }
         
-        results.enumerateObjectsUsingBlock { (coll, _, _) in
+        let newResults = NSMutableArray(array: CopySmartAlbumResults)
+        newResults.addObjectsFromArray(CopyAlbumResults)
+        
+        AlbumResults.enumerateObjectsUsingBlock { (coll, _, _) in
             
             if let collection = coll as? PHAssetCollection{
                 
                 if collection.photosCount <= 0 && newResults.containsObject(collection){
+                    
+                    newResults.removeObject(collection)
+                }
+            }
+        }
+        
+        SmartAlbumResults.enumerateObjectsUsingBlock { (coll, _, _) in
+            
+            if let collection = coll as? PHAssetCollection{
+                
+                if collection.assetCollectionSubtype == .SmartAlbumRecentlyAdded || (collection.photosCount <= 0 && newResults.containsObject(collection)){
                 
                     newResults.removeObject(collection)
                 }
             }
         }
+        
+
         
         self.FetchResult = newResults
         
