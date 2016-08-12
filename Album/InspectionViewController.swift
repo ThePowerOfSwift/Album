@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class InspectionViewController: UIViewController,PhotoAuthProtocol {
 
@@ -22,3 +23,21 @@ class InspectionViewController: UIViewController,PhotoAuthProtocol {
     }
 }
 
+
+
+class BaseAlbumViewController:UIViewController{
+    
+    var FetchResult:PHFetchResult!
+    
+    @IBOutlet var collectionView: UICollectionView!
+    
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        
+        let back = UIBarButtonItem()
+        back.title = ""
+        self.navigationItem.backBarButtonItem = back
+        
+    }
+}

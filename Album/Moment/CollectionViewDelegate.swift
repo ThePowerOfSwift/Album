@@ -9,7 +9,169 @@
 import UIKit
 import Photos
 
-extension MomentViewController:UICollectionViewDelegate{
+
+//MARK: --- UICollectionViewDataSource
+extension MomentViewController:UICollectionViewDataSource{
+    
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        
+        return self.FetchResult.count
+    }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if let collection = self.FetchResult.objectAtIndex(section) as? PHAssetCollection{
+            
+            return collection.estimatedAssetCount
+        }
+        
+        return 0
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! MomentCell
+        
+        if let collection = self.FetchResult.objectAtIndex(indexPath.section) as? PHAssetCollection{
+            
+            cell.setPHAsset(imageManager, asset: PHAsset.SoreCreateTime(collection).objectAtIndex(indexPath.item) as! PHAsset)
+        }
+        
+        if (self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available) {
+            
+            if let perView = cell.viewControllerPreviewing {
+                
+                self.unregisterForPreviewingWithContext(perView)
+            }
+            
+            cell.viewControllerPreviewing =  self.registerForPreviewingWithDelegate(self, sourceView: cell)
+        }
+        
+        return cell
+    }
+    
+    
+    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView{
+        
+        if kind == UICollectionElementKindSectionFooter && indexPath.section == collectionView.numberOfSections()-1 {
+        
+            let reusableView = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionFooter, withReuseIdentifier: "countview", forIndexPath: indexPath) as! CountReusableView
+            
+            reusableView.setPHAssetCollection()
+            
+            return reusableView
+        }
+        
+        let reusableView = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: "TimeResableView", forIndexPath: indexPath) as! MomentReusableView
+        
+        if indexPath.section == 0 {
+            
+            reusableView.tabBarView.hidden = false
+            reusableView.backgroundColor = UIColor.clearColor()
+        }
+        
+        if let collection = self.FetchResult.objectAtIndex(indexPath.section) as? PHAssetCollection{
+            
+            reusableView.setPHAssetCollection(collection)
+            
+            let tapGesture = UITapGestureRecognizer(closure: { (_) in
+                
+                if let attribs = self.collectionView.layoutAttributesForItemAtIndexPath(indexPath){
+                    
+                    let topOfHeader = CGPoint(x: 0, y: attribs.frame.origin.y - (self.collectionView.collectionViewLayout as! MomentCollectionLayout).naviHeight - 50)
+                    
+                    self.collectionView.setContentOffset(topOfHeader, animated: true)
+                }
+            })
+            
+            reusableView.addGestureRecognizer(tapGesture)
+            
+            return reusableView
+        }
+        
+        return reusableView
+    }
+}
+
+
+//MARK: --- UICollectionViewDelegateFlowLayout
+extension MomentViewController:UICollectionViewDelegateFlowLayout{
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize{
+        
+        let ScreenSize = UIScreen.mainScreen().bounds.size
+        
+        let ScreenWidth = ScreenSize.width > ScreenSize.height ? ScreenSize.height : ScreenSize.width
+        
+        let CellWidth = (ScreenWidth-1.5)/4
+        
+        return CGSize(width: CellWidth, height: CellWidth)
+    }
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets{
+        
+        return UIEdgeInsetsZero
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat{
+        
+        return 0.5
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat{
+        
+        return 0.5
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
+        
+        return CGSize(width: 0, height: 50)
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize{
+        
+        if section == collectionView.numberOfSections()-1 {
+        
+            return CGSize(width: 0, height: 80)
+        }
+        
+        return CGSizeZero
+    }
+}
+
+//MARK: --- UICollectionViewDelegate
+extension MomentViewController:UICollectionViewDelegate,UIViewControllerPreviewingDelegate{
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        
+        self.navigationController?.pushViewController(viewControllerToCommit, animated: false)
+    }
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        
+        if let cell = previewingContext.sourceView as? MomentCell,indexPath = self.collectionView.indexPathForCell(cell){
+            
+            let viewController = PhotoPerviewViewController(pageIndex: indexPath, momentViewController: self)
+
+            if let collection = self.FetchResult.objectAtIndex(indexPath.section) as? PHAssetCollection,asset = PHAsset.SoreCreateTime(collection).objectAtIndex(indexPath.item) as? PHAsset{
+                
+                if asset.pixelWidth > asset.pixelHeight {
+                
+                    let height = CGFloat(asset.pixelHeight)/(CGFloat(asset.pixelWidth)/UIScreen.mainScreen().bounds.width)
+                    
+                    viewController.preferredContentSize = CGSize(width: UIScreen.mainScreen().bounds.width, height: height)
+                }else{
+                
+                    let width = CGFloat(asset.pixelWidth)/(CGFloat(asset.pixelHeight)/UIScreen.mainScreen().bounds.height)
+                    
+                    viewController.preferredContentSize = CGSize(width: width, height: UIScreen.mainScreen().bounds.height)
+                }
+                
+            }
+            
+            return viewController
+        }
+        return nil
+    }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         

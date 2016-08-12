@@ -1,5 +1,5 @@
 //
-//  MomentReusableView.swift
+//  MomentCollectionViewCell.swift
 //  Album
 //
 //  Created by Mister on 16/4/26.
@@ -9,8 +9,67 @@
 import UIKit
 import Photos
 
-class MomentReusableView:UICollectionReusableView{
+//MARK:  MomentCell
+class MomentCell:UICollectionViewCell{
 
+    var viewControllerPreviewing:UIViewControllerPreviewing?
+    
+    @IBOutlet var imageView: UIImageView!
+    
+    func setPHAsset(imageManager:PHImageManager = PHImageManager.defaultManager(),asset:PHAsset){
+    
+        let size = self.frame.size.CGSizeScale(1)
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            
+            let image =  AttributedStringLoader.sharedLoader.syncImageByAsset(asset,cache: false, imageManager: imageManager, size: size)
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                self.imageView.image = image
+            })
+        })
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,Int64(0.1 * Double(NSEC_PER_SEC))),dispatch_get_main_queue(), {
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+                
+                AttributedStringLoader.sharedLoader.asyncImageByAsset(asset,cache: false, size: self.frame.size.CGSizeScale(), finish: { (image) in
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                        
+                        self.imageView.image = image
+                    })
+                })
+            })
+        })
+    }
+}
+
+//MARK:  UICollectionReusableView
+class CountReusableView:UICollectionReusableView{
+    
+    @IBOutlet var countlabel: UILabel!
+    
+    
+    func setPHAssetCollection(fetchResult:PHFetchResult?=nil){
+        
+        var string = ""
+        
+        let imageCount = (fetchResult ?? PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)).countOfAssetsWithMediaType(PHAssetMediaType.Image)
+        let videoCount = (fetchResult ?? PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Video, options: nil)).countOfAssetsWithMediaType(PHAssetMediaType.Video)
+        let audioCount = (fetchResult ?? PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Audio, options: nil)).countOfAssetsWithMediaType(PHAssetMediaType.Audio)
+        if imageCount > 0 { string += "\(imageCount)张照片" }
+        if videoCount > 0 { string += " \(videoCount)个视频" }
+        if audioCount > 0 { string += " \(audioCount)个音频" }
+        
+        self.countlabel.text = string
+    }
+}
+
+//MARK:  UICollectionReusableView
+class MomentReusableView:UICollectionReusableView{
+    
     var indexPath:NSIndexPath!
     
     @IBOutlet var tabBarView: UITabBar!
@@ -20,7 +79,7 @@ class MomentReusableView:UICollectionReusableView{
     
     
     func setPHAssetCollection(collection:PHAssetCollection){
-    
+        
         self.RightDescLabel.hidden = true
         self.LeftDescLabel.hidden = true
         
@@ -41,8 +100,7 @@ class MomentReusableView:UICollectionReusableView{
     }
 }
 
-
-
+//MARK:  地理位置缓存器
 class GeocoderLocationLoader {
     
     lazy var cache = NSCache()
@@ -61,7 +119,7 @@ class GeocoderLocationLoader {
     }
     
     func locationStr(location:CLLocation,completionHandler:((location:CLLocation,locationStr:String)->())){
-    
+        
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {()in
             let key = "\(location.coordinate.latitude) - \(location.coordinate.longitude)"
             

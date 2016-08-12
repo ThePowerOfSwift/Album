@@ -18,6 +18,9 @@ class PhotoPerviewDetailViewController: UIViewController {
     var imageView:UIImageView!
     var scrollView:UIScrollView!
     
+    var videoplayer:AVPlayer!
+    var videoItem:AVPlayerItem!
+    
     private var pan:UIPanGestureRecognizer!
     private var pinch:UIPinchGestureRecognizer!
     
@@ -47,6 +50,10 @@ class PhotoPerviewDetailViewController: UIViewController {
         self.scrollView.zoomScale = 1
         self.view.addSubview(self.scrollView)
         
+        self.pinch = UIPinchGestureRecognizer(target: self, action: #selector(PhotoPerviewDetailViewController.pinchActionBlock(_:)))
+        self.pinch.delegate = self
+        self.scrollView.addGestureRecognizer(self.pinch)
+
         self.imageView = UIImageView(frame: self.view.bounds)
         self.imageView.autoresizingMask = [.FlexibleWidth,.FlexibleHeight,.FlexibleTopMargin,.FlexibleLeftMargin,.FlexibleRightMargin,.FlexibleBottomMargin]
         self.imageView.contentMode = .ScaleAspectFit
@@ -54,17 +61,11 @@ class PhotoPerviewDetailViewController: UIViewController {
         self.imageView.tag = 506
         self.scrollView.addSubview(self.imageView)
         
-        self.pinch = UIPinchGestureRecognizer(target: self, action: #selector(PhotoPerviewDetailViewController.pinchActionBlock(_:)))
-        self.pinch.delegate = self
-        self.scrollView.addGestureRecognizer(self.pinch)
-        
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(PhotoPerviewDetailViewController.doubleTapActionBlock(_:)))
         doubleTap.numberOfTapsRequired = 2
         self.imageView.userInteractionEnabled = true
         self.imageView.addGestureRecognizer(doubleTap)
-        
 
-        
         imageTap.requireGestureRecognizerToFail(doubleTap)
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
@@ -81,7 +82,9 @@ class PhotoPerviewDetailViewController: UIViewController {
                 })
             })
         })
-    }    
+    }
+    
+    
     /**
      处理 pinch 动作
      
@@ -91,15 +94,10 @@ class PhotoPerviewDetailViewController: UIViewController {
   
     }
     
-    
-
-    
     func imageTapActionBlock(gestureRecognizer:UIGestureRecognizer){
         self.setNeedsStatusBarAppearanceUpdate()
         self.prefersStatusBarHidden()
         self.navigationController?.setNavigationBarHidden(true, animated: true)
-        
-        
     }
     
     func doubleTapActionBlock(gestureRecognizer:UIGestureRecognizer){

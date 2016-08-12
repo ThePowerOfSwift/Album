@@ -8,15 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		9370D0482E9D086BABEA8814 /* Pods_Album.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA23337177BD84993F4AA9E /* Pods_Album.framework */; };
+		AE4EB0171D5D74E700523A48 /* SmartAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4EB0161D5D74E700523A48 /* SmartAlbumViewController.swift */; };
+		AE4EB0201D5D753800523A48 /* CollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4EB0191D5D753800523A48 /* CollectionViewDelegate.swift */; };
+		AE4EB0221D5D753800523A48 /* MomentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4EB01B1D5D753800523A48 /* MomentCell.swift */; };
+		AE4EB0231D5D753800523A48 /* MomentCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4EB01C1D5D753800523A48 /* MomentCollectionLayout.swift */; };
+		AE4EB0251D5D753800523A48 /* MomentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4EB01E1D5D753800523A48 /* MomentViewController.swift */; };
+		AE4EB0271D5D77DE00523A48 /* AlbumTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4EB0261D5D77DE00523A48 /* AlbumTableViewCell.swift */; };
+		AE4EB02A1D5D86F800523A48 /* SmartDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE4EB0291D5D86F800523A48 /* SmartDetailViewController.swift */; };
 		AE5B989D1CCF3F6500444F42 /* NSDateEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B989C1CCF3F6500444F42 /* NSDateEx.swift */; };
 		AE5B989F1CCF586900444F42 /* Curly.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B989E1CCF586900444F42 /* Curly.swift */; };
-		AE5B98A51CCF735400444F42 /* MomentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98A11CCF735400444F42 /* MomentCell.swift */; };
-		AE5B98A61CCF735400444F42 /* MomentCollectionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98A21CCF735400444F42 /* MomentCollectionLayout.swift */; };
-		AE5B98A71CCF735400444F42 /* MomentReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98A31CCF735400444F42 /* MomentReusableView.swift */; };
-		AE5B98A81CCF735400444F42 /* MomentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98A41CCF735400444F42 /* MomentViewController.swift */; };
-		AE5B98AA1CCF737D00444F42 /* CollectionViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */; };
-		AE5B98AC1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98AB1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift */; };
-		AE5B98AE1CCF742100444F42 /* CollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5B98AD1CCF742100444F42 /* CollectionViewDelegate.swift */; };
 		AE71001D1D5C4DE60038CA47 /* CustomTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE71001C1D5C4DE60038CA47 /* CustomTransitioning.swift */; };
 		AEDBF7531D5C23DB00E90762 /* PhotoPerviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBF7511D5C23DB00E90762 /* PhotoPerviewViewController.swift */; };
 		AEDBF7551D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDBF7541D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift */; };
@@ -34,15 +34,15 @@
 		0ABB9EF8D2247FF4107C43C3 /* Pods-Album.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.release.xcconfig"; path = "Pods/Target Support Files/Pods-Album/Pods-Album.release.xcconfig"; sourceTree = "<group>"; };
 		3CA23337177BD84993F4AA9E /* Pods_Album.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Album.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		812EEA70BE3C5E02AAFDF338 /* Pods-Album.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Album.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Album/Pods-Album.debug.xcconfig"; sourceTree = "<group>"; };
+		AE4EB0161D5D74E700523A48 /* SmartAlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmartAlbumViewController.swift; sourceTree = "<group>"; };
+		AE4EB0191D5D753800523A48 /* CollectionViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegate.swift; sourceTree = "<group>"; };
+		AE4EB01B1D5D753800523A48 /* MomentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MomentCell.swift; sourceTree = "<group>"; };
+		AE4EB01C1D5D753800523A48 /* MomentCollectionLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MomentCollectionLayout.swift; sourceTree = "<group>"; };
+		AE4EB01E1D5D753800523A48 /* MomentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MomentViewController.swift; sourceTree = "<group>"; };
+		AE4EB0261D5D77DE00523A48 /* AlbumTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumTableViewCell.swift; sourceTree = "<group>"; };
+		AE4EB0291D5D86F800523A48 /* SmartDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmartDetailViewController.swift; sourceTree = "<group>"; };
 		AE5B989C1CCF3F6500444F42 /* NSDateEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateEx.swift; sourceTree = "<group>"; };
 		AE5B989E1CCF586900444F42 /* Curly.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curly.swift; sourceTree = "<group>"; };
-		AE5B98A11CCF735400444F42 /* MomentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MomentCell.swift; sourceTree = "<group>"; };
-		AE5B98A21CCF735400444F42 /* MomentCollectionLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MomentCollectionLayout.swift; sourceTree = "<group>"; };
-		AE5B98A31CCF735400444F42 /* MomentReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MomentReusableView.swift; sourceTree = "<group>"; };
-		AE5B98A41CCF735400444F42 /* MomentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MomentViewController.swift; sourceTree = "<group>"; };
-		AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDataSource.swift; sourceTree = "<group>"; };
-		AE5B98AB1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegateFlowLayout.swift; sourceTree = "<group>"; };
-		AE5B98AD1CCF742100444F42 /* CollectionViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewDelegate.swift; sourceTree = "<group>"; };
 		AE71001C1D5C4DE60038CA47 /* CustomTransitioning.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTransitioning.swift; sourceTree = "<group>"; };
 		AEDBF7511D5C23DB00E90762 /* PhotoPerviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPerviewViewController.swift; sourceTree = "<group>"; };
 		AEDBF7541D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPerviewDetailViewController.swift; sourceTree = "<group>"; };
@@ -70,18 +70,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AE5B98A01CCF735400444F42 /* MomentCollectionView */ = {
+		AE4EB0151D5D74D600523A48 /* SmartAlbum */ = {
 			isa = PBXGroup;
 			children = (
-				AE5B98A41CCF735400444F42 /* MomentViewController.swift */,
-				AE5B98A11CCF735400444F42 /* MomentCell.swift */,
-				AE5B98A21CCF735400444F42 /* MomentCollectionLayout.swift */,
-				AE5B98A31CCF735400444F42 /* MomentReusableView.swift */,
-				AE5B98AB1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift */,
-				AE5B98A91CCF737D00444F42 /* CollectionViewDataSource.swift */,
-				AE5B98AD1CCF742100444F42 /* CollectionViewDelegate.swift */,
+				AE4EB0281D5D86EE00523A48 /* SmartDetailViewController */,
+				AE4EB0161D5D74E700523A48 /* SmartAlbumViewController.swift */,
+				AE4EB0261D5D77DE00523A48 /* AlbumTableViewCell.swift */,
 			);
-			path = MomentCollectionView;
+			path = SmartAlbum;
+			sourceTree = "<group>";
+		};
+		AE4EB0281D5D86EE00523A48 /* SmartDetailViewController */ = {
+			isa = PBXGroup;
+			children = (
+				AE4EB0291D5D86F800523A48 /* SmartDetailViewController.swift */,
+			);
+			path = SmartDetailViewController;
 			sourceTree = "<group>";
 		};
 		AED6A0F81D5B3B4D00A6CFD5 /* Brower */ = {
@@ -113,7 +117,10 @@
 		AEDEFE971CCF14C00042F75F /* Moment */ = {
 			isa = PBXGroup;
 			children = (
-				AE5B98A01CCF735400444F42 /* MomentCollectionView */,
+				AE4EB01E1D5D753800523A48 /* MomentViewController.swift */,
+				AE4EB0191D5D753800523A48 /* CollectionViewDelegate.swift */,
+				AE4EB01B1D5D753800523A48 /* MomentCell.swift */,
+				AE4EB01C1D5D753800523A48 /* MomentCollectionLayout.swift */,
 			);
 			path = Moment;
 			sourceTree = "<group>";
@@ -140,6 +147,7 @@
 		AEDF78891CCE242700FACFCB /* Album */ = {
 			isa = PBXGroup;
 			children = (
+				AE4EB0151D5D74D600523A48 /* SmartAlbum */,
 				AED6A0F81D5B3B4D00A6CFD5 /* Brower */,
 				AEDEFE971CCF14C00042F75F /* Moment */,
 				AEDF788A1CCE242700FACFCB /* AppDelegate.swift */,
@@ -305,19 +313,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEDBF7571D5C26CB00E90762 /* PHImageLoader.swift in Sources */,
-				AE5B98A71CCF735400444F42 /* MomentReusableView.swift in Sources */,
-				AE5B98AA1CCF737D00444F42 /* CollectionViewDataSource.swift in Sources */,
+				AE4EB0231D5D753800523A48 /* MomentCollectionLayout.swift in Sources */,
 				AE5B989F1CCF586900444F42 /* Curly.swift in Sources */,
 				AE71001D1D5C4DE60038CA47 /* CustomTransitioning.swift in Sources */,
-				AE5B98A81CCF735400444F42 /* MomentViewController.swift in Sources */,
-				AE5B98A61CCF735400444F42 /* MomentCollectionLayout.swift in Sources */,
-				AE5B98AC1CCF73E200444F42 /* CollectionViewDelegateFlowLayout.swift in Sources */,
 				AE5B989D1CCF3F6500444F42 /* NSDateEx.swift in Sources */,
-				AE5B98AE1CCF742100444F42 /* CollectionViewDelegate.swift in Sources */,
+				AE4EB0271D5D77DE00523A48 /* AlbumTableViewCell.swift in Sources */,
+				AE4EB0221D5D753800523A48 /* MomentCell.swift in Sources */,
 				AEDF788D1CCE242700FACFCB /* InspectionViewController.swift in Sources */,
 				AEDEFE9F1CCF17670042F75F /* ExtensionUtil.swift in Sources */,
-				AE5B98A51CCF735400444F42 /* MomentCell.swift in Sources */,
+				AE4EB0251D5D753800523A48 /* MomentViewController.swift in Sources */,
 				AEDF789E1CCE261000FACFCB /* PhotoAuthProtocol.swift in Sources */,
+				AE4EB0201D5D753800523A48 /* CollectionViewDelegate.swift in Sources */,
+				AE4EB0171D5D74E700523A48 /* SmartAlbumViewController.swift in Sources */,
+				AE4EB02A1D5D86F800523A48 /* SmartDetailViewController.swift in Sources */,
 				AEDBF7531D5C23DB00E90762 /* PhotoPerviewViewController.swift in Sources */,
 				AEDF788B1CCE242700FACFCB /* AppDelegate.swift in Sources */,
 				AEDBF7551D5C23FA00E90762 /* PhotoPerviewDetailViewController.swift in Sources */,

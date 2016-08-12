@@ -35,7 +35,7 @@ class CustomPopAnimatedTransitioning:NSObject, UIViewControllerAnimatedTransitio
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         
         guard let containerView = transitionContext.containerView() else { return transitionContext.completeTransition(true) }
-        guard let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as? MomentViewController else { return transitionContext.completeTransition(true) }
+        guard let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as? BaseAlbumViewController else { return transitionContext.completeTransition(true) }
         guard let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as? PhotoPerviewViewController else { return transitionContext.completeTransition(true) }
         guard let toDetailViewController = fromViewController.pageViewController.viewControllers?.first as? PhotoPerviewDetailViewController else { return transitionContext.completeTransition(true) }
         
@@ -60,6 +60,8 @@ class CustomPopAnimatedTransitioning:NSObject, UIViewControllerAnimatedTransitio
             
             cell.imageView.alpha = 0
             toDetailViewController.imageView.alpha = 0
+            
+            imageView.contentMode = .ScaleAspectFit
             
             UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .CurveEaseInOut, animations: {
                 imageView.contentMode = .ScaleAspectFill
@@ -87,13 +89,24 @@ class CustomPushAnimatedTransitioning:NSObject, UIViewControllerAnimatedTransiti
         guard let containerView = transitionContext.containerView() else { return transitionContext.completeTransition(true) }
         guard let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as? PhotoPerviewViewController else { return transitionContext.completeTransition(true) }
         guard let toDetailViewController = toViewController.pageViewController.viewControllers?.first as? PhotoPerviewDetailViewController else { return transitionContext.completeTransition(true) }
-        guard let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as? MomentViewController else { return transitionContext.completeTransition(true) }
+        guard let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as? BaseAlbumViewController else { return transitionContext.completeTransition(true) }
         guard let cell = fromViewController.collectionView.cellForItemAtIndexPath(toViewController.pageIndex) as? MomentCell else { return transitionContext.completeTransition(true) }
         
         containerView.addSubview(fromViewController.view)
         containerView.addSubview(toViewController.view)
         
         let imageView = cell.cloneImageView(toDetailViewController.asset)
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            
+            AttributedStringLoader.sharedLoader.asyncImageByAsset(toDetailViewController.asset, cache: false, size: PHImageManagerMaximumSize, finish: { (image) in
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    
+                    imageView.image = image
+                })
+            })
+        })
         
         let fromFrame = cell.convertRect(cell.imageView.bounds, toView: fromViewController.view)
         imageView.frame = fromFrame
@@ -103,6 +116,8 @@ class CustomPushAnimatedTransitioning:NSObject, UIViewControllerAnimatedTransiti
         
         cell.imageView.alpha = 0
         toDetailViewController.imageView.alpha = 0
+        
+        imageView.contentMode = .ScaleAspectFill
         
         UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .CurveEaseInOut, animations: {
             imageView.contentMode = .ScaleAspectFit
