@@ -9,15 +9,15 @@
 import UIKit
 import Photos
 
-extension NSDate{
+extension Date{
 
     func PictureCreateTimeStr() -> String{
     
         if self.isToday() {return "今天"}
         if self.isYesterday() {return "昨天"}
         if self.isThisWeek() {return self.weekday().WeekStr()}
-        if self.isThisYear(){return self.toString(format: DateFormat.Custom("M月d日"))}
-        return self.toString(format: DateFormat.Custom("yyyy年M月d日"))
+        if self.isThisYear(){return self.toString(DateFormat.custom("M月d日"))}
+        return self.toString(DateFormat.custom("yyyy年M月d日"))
     }
 }
 
@@ -47,17 +47,17 @@ private extension Int{
 
 extension PHAsset{
     
-    class func SoreCreateTime(collection:PHAssetCollection) -> PHFetchResult{
+    class func SoreCreateTime(_ collection:PHAssetCollection) -> PHFetchResult<AnyObject>{
         
         let sortOptions = PHFetchOptions()
         sortOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        return PHAsset.fetchAssetsInAssetCollection(collection, options: sortOptions)
+        return PHAsset.fetchAssets(in: collection, options: sortOptions) as! PHFetchResult<AnyObject>
     }
 }
 
 private extension CGSize{
     
-    func byScale(scale:CGFloat) -> CGSize{
+    func byScale(_ scale:CGFloat) -> CGSize{
         
         return CGSize(width: self.width*scale, height: self.height*scale)
     }
@@ -65,20 +65,20 @@ private extension CGSize{
 
 extension PHCachingImageManager{
     
-    func requestImageForAsset(asset:PHAsset,size:CGSize,resultHandler: (UIImage?, [NSObject : AnyObject]?) -> Void){
+    func requestImageForAsset(_ asset:PHAsset,size:CGSize,resultHandler: @escaping (UIImage?, [AnyHashable: Any]?) -> Void){
         
         let options = PHImageRequestOptions()
         
-        options.networkAccessAllowed = true
-        options.resizeMode = PHImageRequestOptionsResizeMode.Exact
-        options.deliveryMode = PHImageRequestOptionsDeliveryMode.Opportunistic
+        options.isNetworkAccessAllowed = true
+        options.resizeMode = PHImageRequestOptionsResizeMode.exact
+        options.deliveryMode = PHImageRequestOptionsDeliveryMode.opportunistic
         
-        self.requestImageForAsset(asset, targetSize: size.byScale(UIScreen.mainScreen().scale), contentMode: .AspectFill, options: options, resultHandler: resultHandler)
+        self.requestImage(for: asset, targetSize: size.byScale(UIScreen.main.scale), contentMode: .aspectFill, options: options, resultHandler: resultHandler)
     }
 }
 
 
-extension NSIndexPath {
+extension IndexPath {
 
     /**
      获取前一个NSIndexPath
@@ -87,16 +87,16 @@ extension NSIndexPath {
      
      - returns: 返回的NsindexPath
      */
-    func indexPathPrevious(collectionView:UICollectionView) -> NSIndexPath?{
+    func indexPathPrevious(_ collectionView:UICollectionView) -> IndexPath?{
     
-        if self.section == 0 && self.item == 0 { return nil}
+        if (self as NSIndexPath).section == 0 && (self as NSIndexPath).item == 0 { return nil}
         
-        if self.item == 0 {
+        if (self as NSIndexPath).item == 0 {
         
-            return NSIndexPath(forRow: collectionView.numberOfItemsInSection(self.section-1)-1, inSection: self.section-1)
+            return IndexPath(row: collectionView.numberOfItems(inSection: (self as NSIndexPath).section-1)-1, section: (self as NSIndexPath).section-1)
         }
         
-        return NSIndexPath(forRow: self.item-1, inSection: self.section)
+        return IndexPath(row: (self as NSIndexPath).item-1, section: (self as NSIndexPath).section)
     }
     
     /**
@@ -106,16 +106,16 @@ extension NSIndexPath {
      
      - returns: 返回的NsindexPath
      */
-    func indexPathNext(collectionView:UICollectionView) -> NSIndexPath?{
+    func indexPathNext(_ collectionView:UICollectionView) -> IndexPath?{
         
-        if self.section == collectionView.numberOfSections()-1 && self.item == collectionView.maxRow(section) { return nil}
+        if (self as NSIndexPath).section == collectionView.numberOfSections-1 && (self as NSIndexPath).item == collectionView.maxRow(section) { return nil}
         
-        if self.item == collectionView.maxRow(section) {
+        if (self as NSIndexPath).item == collectionView.maxRow(section) {
             
-            return NSIndexPath(forRow: 0, inSection: self.section+1)
+            return IndexPath(row: 0, section: (self as NSIndexPath).section+1)
         }
         
-        return NSIndexPath(forRow: self.item+1, inSection: self.section)
+        return IndexPath(row: (self as NSIndexPath).item+1, section: (self as NSIndexPath).section)
     }
 }
 
@@ -129,9 +129,9 @@ extension UICollectionView{
      
      - returns: <#return value description#>
      */
-    func maxRow(section:Int) -> Int{
+    func maxRow(_ section:Int) -> Int{
     
-        return self.numberOfItemsInSection(section)-1
+        return self.numberOfItems(inSection: section)-1
     }
     
     /**
@@ -143,15 +143,15 @@ extension UICollectionView{
      */
     func maxSection() -> Int{
         
-        return self.numberOfSections()-1
+        return self.numberOfSections-1
     }
     
     /**
      最大的 NSIndexPath
      */
-    func maxIndexPath() -> NSIndexPath{
+    func maxIndexPath() -> IndexPath{
     
-        return NSIndexPath(forItem: self.maxRow(self.maxSection()), inSection: self.maxSection())
+        return IndexPath(item: self.maxRow(self.maxSection()), section: self.maxSection())
     }
     
     /**
@@ -159,8 +159,8 @@ extension UICollectionView{
      
      - parameter animated: 是否有动画
      */
-    func scrollToBottom (animated:Bool = true){
+    func scrollToBottom (_ animated:Bool = true){
     
-        self.scrollToItemAtIndexPath(self.maxIndexPath(), atScrollPosition: UICollectionViewScrollPosition.Bottom, animated: animated)
+        self.scrollToItem(at: self.maxIndexPath(), at: UICollectionViewScrollPosition.bottom, animated: animated)
     }
 }

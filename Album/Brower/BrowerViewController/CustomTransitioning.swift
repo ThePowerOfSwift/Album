@@ -11,14 +11,14 @@ import Photos
 
 extension PhotoPerviewViewController: UINavigationControllerDelegate{
 
-    func navigationController(navigationController: UINavigationController, animationControllerForOperation operation: UINavigationControllerOperation, fromViewController fromVC: UIViewController, toViewController toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
-        if operation == .Pop { return CustomPopAnimatedTransitioning() }
+        if operation == .pop { return CustomPopAnimatedTransitioning() }
         
         return CustomPushAnimatedTransitioning()
     }
     
-    func navigationController(navigationController: UINavigationController, interactionControllerForAnimationController animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         
         return nil
     }
@@ -27,32 +27,33 @@ extension PhotoPerviewViewController: UINavigationControllerDelegate{
 
 class CustomPopAnimatedTransitioning:NSObject, UIViewControllerAnimatedTransitioning {
     
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         
         return 0.5
     }
     
-    func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
-        guard let containerView = transitionContext.containerView() else { return transitionContext.completeTransition(true) }
-        guard let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as? BaseAlbumViewController else { return transitionContext.completeTransition(true) }
-        guard let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as? PhotoPerviewViewController else { return transitionContext.completeTransition(true) }
+        guard let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to) as? BaseAlbumViewController else { return transitionContext.completeTransition(true) }
+        guard let fromViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from) as? PhotoPerviewViewController else { return transitionContext.completeTransition(true) }
         guard let toDetailViewController = fromViewController.pageViewController.viewControllers?.first as? PhotoPerviewDetailViewController else { return transitionContext.completeTransition(true) }
+        
+        let containerView = transitionContext.containerView
         
         containerView.addSubview(fromViewController.view)
         containerView.addSubview(toViewController.view)
         
-        toViewController.collectionView.scrollToItemAtIndexPath(fromViewController.pageIndex, atScrollPosition: UICollectionViewScrollPosition.CenteredVertically, animated: false)
+        toViewController.collectionView.scrollToItem(at: fromViewController.pageIndex as IndexPath, at: UICollectionViewScrollPosition.centeredVertically, animated: false)
         
-        dispatch_async(dispatch_get_main_queue()) { 
+        DispatchQueue.main.async { 
             
-            guard let cell = toViewController.collectionView.cellForItemAtIndexPath(toDetailViewController.pageIndex) as? MomentCell else { return transitionContext.completeTransition(true) }
+            guard let cell = toViewController.collectionView.cellForItem(at: toDetailViewController.pageIndex as IndexPath) as? MomentCell else { return transitionContext.completeTransition(true) }
             
-            let toFrame = cell.convertRect(cell.imageView.bounds, toView: toViewController.view)
+            let toFrame = cell.convert(cell.imageView.bounds, to: toViewController.view)
             
             let imageView = cell.cloneImageView(toDetailViewController.asset)
             
-            let fromFrame = fromViewController.view.convertRect(toDetailViewController.imageView.bounds, fromView: toDetailViewController.view)
+            let fromFrame = fromViewController.view.convert(toDetailViewController.imageView.bounds, from: toDetailViewController.view)
             imageView.frame = fromFrame
             
             
@@ -61,10 +62,10 @@ class CustomPopAnimatedTransitioning:NSObject, UIViewControllerAnimatedTransitio
             cell.imageView.alpha = 0
             toDetailViewController.imageView.alpha = 0
             
-            imageView.contentMode = .ScaleAspectFit
+            imageView.contentMode = .scaleAspectFit
             
-            UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .CurveEaseInOut, animations: {
-                imageView.contentMode = .ScaleAspectFill
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: UIViewAnimationOptions(), animations: {
+                imageView.contentMode = .scaleAspectFill
                 imageView.frame = toFrame
             }) { (_) in
                 imageView.removeFromSuperview()
@@ -79,48 +80,49 @@ class CustomPopAnimatedTransitioning:NSObject, UIViewControllerAnimatedTransitio
 
 class CustomPushAnimatedTransitioning:NSObject, UIViewControllerAnimatedTransitioning {
     
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         
         return 0.5
     }
     
-    func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
-        guard let containerView = transitionContext.containerView() else { return transitionContext.completeTransition(true) }
-        guard let toViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as? PhotoPerviewViewController else { return transitionContext.completeTransition(true) }
+        guard let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to) as? PhotoPerviewViewController else { return transitionContext.completeTransition(true) }
         guard let toDetailViewController = toViewController.pageViewController.viewControllers?.first as? PhotoPerviewDetailViewController else { return transitionContext.completeTransition(true) }
-        guard let fromViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as? BaseAlbumViewController else { return transitionContext.completeTransition(true) }
-        guard let cell = fromViewController.collectionView.cellForItemAtIndexPath(toViewController.pageIndex) as? MomentCell else { return transitionContext.completeTransition(true) }
+        guard let fromViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from) as? BaseAlbumViewController else { return transitionContext.completeTransition(true) }
+        guard let cell = fromViewController.collectionView.cellForItem(at: toViewController.pageIndex as IndexPath) as? MomentCell else { return transitionContext.completeTransition(true) }
+        
+        let containerView = transitionContext.containerView
         
         containerView.addSubview(fromViewController.view)
         containerView.addSubview(toViewController.view)
         
         let imageView = cell.cloneImageView(toDetailViewController.asset)
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
             
             AttributedStringLoader.sharedLoader.asyncImageByAsset(toDetailViewController.asset, cache: false, size: PHImageManagerMaximumSize, finish: { (image) in
                 
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async(execute: {
                     
                     imageView.image = image
                 })
             })
-        })
+        }
         
-        let fromFrame = cell.convertRect(cell.imageView.bounds, toView: fromViewController.view)
+        let fromFrame = cell.convert(cell.imageView.bounds, to: fromViewController.view)
         imageView.frame = fromFrame
-        let toFrame = toDetailViewController.scrollView.convertRect(toDetailViewController.imageView.bounds, toView: toDetailViewController.view)
+        let toFrame = toDetailViewController.scrollView.convert(toDetailViewController.imageView.bounds, to: toDetailViewController.view)
         
         containerView.addSubview(imageView)
         
         cell.imageView.alpha = 0
         toDetailViewController.imageView.alpha = 0
         
-        imageView.contentMode = .ScaleAspectFill
+        imageView.contentMode = .scaleAspectFill
         
-        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .CurveEaseInOut, animations: {
-            imageView.contentMode = .ScaleAspectFit
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: UIViewAnimationOptions(), animations: {
+            imageView.contentMode = .scaleAspectFit
             imageView.frame = toFrame
         }) { (_) in
             imageView.removeFromSuperview()
@@ -142,11 +144,11 @@ extension MomentCell{
      
      - returns: 返回科隆的 UImageview
      */
-    func cloneImageView(asset:PHAsset) -> UIImageView{
+    func cloneImageView(_ asset:PHAsset) -> UIImageView{
         
         let imageView = UIImageView()
         imageView.clipsToBounds = true
-        imageView.contentMode = .ScaleToFill
+        imageView.contentMode = .scaleToFill
         imageView.image = asset.scaleImage(self.frame.width)
         
         return imageView
@@ -159,12 +161,12 @@ extension MomentCell{
      
      - returns: <#return value description#>
      */
-    func isFirstLine(collectionView:UICollectionView) -> Bool{
+    func isFirstLine(_ collectionView:UICollectionView) -> Bool{
     
-        if let item = collectionView.indexPathForCell(self)?.item {
+        if let item = (collectionView.indexPath(for: self) as NSIndexPath?)?.item {
         
-            let screenWidth = UIScreen.mainScreen().bounds.width
-            let screenHeight = UIScreen.mainScreen().bounds.width
+            let screenWidth = UIScreen.main.bounds.width
+            let screenHeight = UIScreen.main.bounds.width
             
             let sw = max(screenWidth, screenHeight)
             
@@ -189,7 +191,7 @@ extension PHAsset{
      
      - returns: 返回生成的缩略图
      */
-    func scaleImage(width:CGFloat) -> UIImage{
+    func scaleImage(_ width:CGFloat) -> UIImage{
     
         let ssize = CGSize(width: width, height: CGFloat(self.pixelHeight)/(CGFloat(self.pixelWidth)/width)).CGSizeScale()
         

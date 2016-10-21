@@ -17,26 +17,26 @@ class AlbumTableViewCell:UITableViewCell{
     @IBOutlet var thumbnailImageView2:UIImageView!
     @IBOutlet var thumbnailImageView3:UIImageView!
     
-    func setAssetCollection(collection:PHAssetCollection){
+    func setAssetCollection(_ collection:PHAssetCollection){
         
         self.titleLabel.text = collection.localizedTitle!
         
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             
             self.assetNumberLabel.text = "\(collection.photosCount)"
         })
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
             
             let images = ThumbnailImageLoader.sharedLoader.syncImagesByCollection(collection,cache: false, size: self.thumbnailImageView1.frame.size.CGSizeScale())
             
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 
                 if images.count > 0 { self.thumbnailImageView1.image = images[0] }
                 if images.count > 1 { self.thumbnailImageView2.image = images[1] }
                 if images.count > 2 { self.thumbnailImageView3.image = images[2] }
             })
-        })
+        }
     }
 }
 
@@ -45,30 +45,19 @@ extension PHAssetCollection {
     var photosCount: Int {
         let fetchOptions = PHFetchOptions()
         //        fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.Image.rawValue)
-        let result = PHAsset.fetchAssetsInAssetCollection(self, options: fetchOptions)
+        let result = PHAsset.fetchAssets(in: self, options: fetchOptions)
         return result.count
     }
 }
 
-
-
 /// 属性字符串 缓存器
 class ThumbnailImageLoader:NSObject {
     
-    lazy var cache = NSCache()
     
-    class var sharedLoader:ThumbnailImageLoader!{
-        get{
-            struct backTaskLeton{
-                static var predicate:dispatch_once_t = 0
-                static var instance:ThumbnailImageLoader? = nil
-            }
-            dispatch_once(&backTaskLeton.predicate, { () -> Void in
-                backTaskLeton.instance = ThumbnailImageLoader()
-            })
-            return backTaskLeton.instance
-        }
-    }
+    let cache = NSCache<AnyObject,AnyObject>()
+    
+    static let sharedLoader = ThumbnailImageLoader()
+
     
     /**
      根据提供的String 继而 同步的方式 提取图片 并且返回
@@ -78,30 +67,32 @@ class ThumbnailImageLoader:NSObject {
      
      - returns: 返回属性字符串
      */
-    func syncImagesByCollection(collection:PHAssetCollection,cache:Bool=true,size:CGSize) -> [UIImage] {
+    func syncImagesByCollection(_ collection:PHAssetCollection,cache:Bool=true,size:CGSize) -> [UIImage] {
         
         if cache {
             
-            if let image = self.cache.objectForKey(collection) as? [UIImage] { return image }
+            if let image = self.cache.object(forKey: collection) as? [UIImage] { return image }
         }
         
         
         let options = PHFetchOptions()
+        
         options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        
         options.fetchLimit = 3
-        let result = PHAsset.fetchAssetsInAssetCollection(collection, options: options)
         
         var images = [UIImage]()
         
-        result.enumerateObjectsUsingBlock { (assert, index, _) in
-            
-            if let asset = assert as? PHAsset {
-                let image = AttributedStringLoader.sharedLoader.syncImageByAsset(asset, size: size)
-                images.append(image)
-            }
-        }
+        let result:PHFetchResult<PHAsset> = PHAsset.fetchAssets(in: collection, options: options)
         
-        if cache { self.cache.setObject(images, forKey: collection) }
+        result.enumerateObjects( { (assert, _, _) in
+            
+            let image = AttributedStringLoader.sharedLoader.syncImageByAsset(assert, size: size)
+            
+            images.append(image)
+        })
+        
+        if cache { self.cache.setObject(images as AnyObject, forKey: collection) }
         
         return images
     }

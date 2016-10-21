@@ -13,81 +13,68 @@ import Photos
 //MARK: --- UICollectionViewDataSource
 extension MomentViewController:UICollectionViewDataSource{
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
         
         return self.FetchResult.count
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if let collection = self.FetchResult.objectAtIndex(section) as? PHAssetCollection{
-            
-            return collection.estimatedAssetCount
-        }
-        
-        return 0
+        return self.FetchResult.object(at: section).estimatedAssetCount
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! MomentCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! MomentCell
         
-        if let collection = self.FetchResult.objectAtIndex(indexPath.section) as? PHAssetCollection{
-            
-            cell.setPHAsset(imageManager, asset: PHAsset.SoreCreateTime(collection).objectAtIndex(indexPath.item) as! PHAsset)
-        }
+        cell.setPHAsset(imageManager, asset: PHAsset.SoreCreateTime(self.FetchResult.object(at: indexPath.section)).object(at: indexPath.item) as! PHAsset)
         
-        if (self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available) {
+        if (self.traitCollection.forceTouchCapability == UIForceTouchCapability.available) {
             
             if let perView = cell.viewControllerPreviewing {
                 
-                self.unregisterForPreviewingWithContext(perView)
+                self.unregisterForPreviewing(withContext: perView)
             }
             
-            cell.viewControllerPreviewing =  self.registerForPreviewingWithDelegate(self, sourceView: cell)
+            cell.viewControllerPreviewing =  self.registerForPreviewing(with: self, sourceView: cell)
         }
         
         return cell
     }
     
     
-    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView{
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView{
         
-        if kind == UICollectionElementKindSectionFooter && indexPath.section == collectionView.numberOfSections()-1 {
+        if kind == UICollectionElementKindSectionFooter && (indexPath as NSIndexPath).section == collectionView.numberOfSections-1 {
         
-            let reusableView = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionFooter, withReuseIdentifier: "countview", forIndexPath: indexPath) as! CountReusableView
+            let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "countview", for: indexPath) as! CountReusableView
             
             reusableView.setPHAssetCollection()
             
             return reusableView
         }
         
-        let reusableView = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: "TimeResableView", forIndexPath: indexPath) as! MomentReusableView
+        let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "TimeResableView", for: indexPath) as! MomentReusableView
         
-        if indexPath.section == 0 {
+        if (indexPath as NSIndexPath).section == 0 {
             
-            reusableView.tabBarView.hidden = false
-            reusableView.backgroundColor = UIColor.clearColor()
+            reusableView.tabBarView.isHidden = false
+            reusableView.backgroundColor = UIColor.clear
         }
         
-        if let collection = self.FetchResult.objectAtIndex(indexPath.section) as? PHAssetCollection{
+        reusableView.setPHAssetCollection(self.FetchResult.object(at: (indexPath as NSIndexPath).section))
+        
+        let tapGesture = UITapGestureRecognizer(closure: { (_) in
             
-            reusableView.setPHAssetCollection(collection)
-            
-            let tapGesture = UITapGestureRecognizer(closure: { (_) in
+            if let attribs = self.collectionView.layoutAttributesForItem(at: indexPath){
                 
-                if let attribs = self.collectionView.layoutAttributesForItemAtIndexPath(indexPath){
-                    
-                    let topOfHeader = CGPoint(x: 0, y: attribs.frame.origin.y - (self.collectionView.collectionViewLayout as! MomentCollectionLayout).naviHeight - 50)
-                    
-                    self.collectionView.setContentOffset(topOfHeader, animated: true)
-                }
-            })
-            
-            reusableView.addGestureRecognizer(tapGesture)
-            
-            return reusableView
-        }
+                let topOfHeader = CGPoint(x: 0, y: attribs.frame.origin.y - (self.collectionView.collectionViewLayout as! MomentCollectionLayout).naviHeight - 50)
+                
+                self.collectionView.setContentOffset(topOfHeader, animated: true)
+            }
+        })
+        
+        reusableView.addGestureRecognizer(tapGesture)
         
         return reusableView
     }
@@ -97,9 +84,9 @@ extension MomentViewController:UICollectionViewDataSource{
 //MARK: --- UICollectionViewDelegateFlowLayout
 extension MomentViewController:UICollectionViewDelegateFlowLayout{
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         
-        let ScreenSize = UIScreen.mainScreen().bounds.size
+        let ScreenSize = UIScreen.main.bounds.size
         
         let ScreenWidth = ScreenSize.width > ScreenSize.height ? ScreenSize.height : ScreenSize.width
         
@@ -107,63 +94,63 @@ extension MomentViewController:UICollectionViewDelegateFlowLayout{
         
         return CGSize(width: CellWidth, height: CellWidth)
     }
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets{
         
-        return UIEdgeInsetsZero
+        return UIEdgeInsets.zero
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat{
-        
-        return 0.5
-    }
-    
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat{
         
         return 0.5
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat{
+        
+        return 0.5
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
         
         return CGSize(width: 0, height: 50)
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize{
         
-        if section == collectionView.numberOfSections()-1 {
+        if section == collectionView.numberOfSections-1 {
         
             return CGSize(width: 0, height: 80)
         }
         
-        return CGSizeZero
+        return CGSize.zero
     }
 }
 
 //MARK: --- UICollectionViewDelegate
 extension MomentViewController:UICollectionViewDelegate,UIViewControllerPreviewingDelegate{
     
-    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         
         self.navigationController?.pushViewController(viewControllerToCommit, animated: false)
     }
     
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         
-        if let cell = previewingContext.sourceView as? MomentCell,indexPath = self.collectionView.indexPathForCell(cell){
+        if let cell = previewingContext.sourceView as? MomentCell,let indexPath = self.collectionView.indexPath(for: cell){
             
             let viewController = PhotoPerviewViewController(pageIndex: indexPath, momentViewController: self)
 
-            if let collection = self.FetchResult.objectAtIndex(indexPath.section) as? PHAssetCollection,asset = PHAsset.SoreCreateTime(collection).objectAtIndex(indexPath.item) as? PHAsset{
+            if let collection = self.FetchResult.object(at: (indexPath as NSIndexPath).section) as? PHAssetCollection,let asset = PHAsset.SoreCreateTime(collection).object(at: (indexPath as NSIndexPath).item) as? PHAsset{
                 
                 if asset.pixelWidth > asset.pixelHeight {
                 
-                    let height = CGFloat(asset.pixelHeight)/(CGFloat(asset.pixelWidth)/UIScreen.mainScreen().bounds.width)
+                    let height = CGFloat(asset.pixelHeight)/(CGFloat(asset.pixelWidth)/UIScreen.main.bounds.width)
                     
-                    viewController.preferredContentSize = CGSize(width: UIScreen.mainScreen().bounds.width, height: height)
+                    viewController.preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: height)
                 }else{
                 
-                    let width = CGFloat(asset.pixelWidth)/(CGFloat(asset.pixelHeight)/UIScreen.mainScreen().bounds.height)
+                    let width = CGFloat(asset.pixelWidth)/(CGFloat(asset.pixelHeight)/UIScreen.main.bounds.height)
                     
-                    viewController.preferredContentSize = CGSize(width: width, height: UIScreen.mainScreen().bounds.height)
+                    viewController.preferredContentSize = CGSize(width: width, height: UIScreen.main.bounds.height)
                 }
                 
             }
@@ -173,7 +160,7 @@ extension MomentViewController:UICollectionViewDelegate,UIViewControllerPreviewi
         return nil
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let viewC = PhotoPerviewViewController(pageIndex: indexPath, momentViewController: self)
         
@@ -181,7 +168,7 @@ extension MomentViewController:UICollectionViewDelegate,UIViewControllerPreviewi
     }
     
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         self.SettingHeaderBlur(scrollView)
         
@@ -189,47 +176,47 @@ extension MomentViewController:UICollectionViewDelegate,UIViewControllerPreviewi
     }
     
     /// 当时图开始滑动的时候，进行试图的监测，完成header的膜玻璃设置。始终只让第一个油膜玻璃效果
-    private func SettingHeaderBlur(scrollView: UIScrollView){
+    fileprivate func SettingHeaderBlur(_ scrollView: UIScrollView){
         
         if let collectionView = scrollView as? UICollectionView{
             
             // 排序 获取第一个 Section
-            let indexPaths = collectionView.indexPathsForVisibleSupplementaryElementsOfKind(UICollectionElementKindSectionHeader).sort({ (index1, index2) -> Bool in
+            let indexPaths = collectionView.indexPathsForVisibleSupplementaryElements(ofKind: UICollectionElementKindSectionHeader).sorted(by: { (index1, index2) -> Bool in
                 
-                return index1.section < index2.section
+                return (index1 as NSIndexPath).section < (index2 as NSIndexPath).section
             })
             
             if indexPaths.count <= 0 { return }
             
             if indexPaths.count == 1 {
-                guard let firindexPath = indexPaths.first,resuab = collectionView.supplementaryViewForElementKind(UICollectionElementKindSectionHeader, atIndexPath: firindexPath) as? MomentReusableView else { return }
-                resuab.tabBarView.hidden = false
-                resuab.backgroundColor = UIColor.clearColor()
+                guard let firindexPath = indexPaths.first,let resuab = collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: firindexPath) as? MomentReusableView else { return }
+                resuab.tabBarView.isHidden = false
+                resuab.backgroundColor = UIColor.clear
                 return
             }
             
             for indexPath in indexPaths {
-                guard let resuab = collectionView.supplementaryViewForElementKind(UICollectionElementKindSectionHeader, atIndexPath: indexPath) as? MomentReusableView else{ return }
-                resuab.tabBarView.hidden = true
-                resuab.backgroundColor = UIColor.whiteColor()
+                guard let resuab = collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: indexPath) as? MomentReusableView else{ return }
+                resuab.tabBarView.isHidden = true
+                resuab.backgroundColor = UIColor.white
             }
             
             guard let layout = self.collectionView.collectionViewLayout as? MomentCollectionLayout else{ return }
             
-            guard let firindexPath = indexPaths.first,firresuab = collectionView.supplementaryViewForElementKind(UICollectionElementKindSectionHeader, atIndexPath: firindexPath) as? MomentReusableView else{ return }
-            let firoriginY = self.view.convertRect(firresuab.frame, fromView: self.collectionView).origin.y
+            guard let firindexPath = indexPaths.first,let firresuab = collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: firindexPath) as? MomentReusableView else{ return }
+            let firoriginY = self.view.convert(firresuab.frame, from: self.collectionView).origin.y
             
-            guard let secresuab = collectionView.supplementaryViewForElementKind(UICollectionElementKindSectionHeader, atIndexPath: indexPaths[1]) as? MomentReusableView else{ return }
+            guard let secresuab = collectionView.supplementaryView(forElementKind: UICollectionElementKindSectionHeader, at: indexPaths[1]) as? MomentReusableView else{ return }
             
 
             let sc = firoriginY+firresuab.frame.height >= layout.naviHeight ? firresuab : secresuab
             
-            sc.tabBarView.hidden = false
-            sc.backgroundColor = UIColor.clearColor()
+            sc.tabBarView.isHidden = false
+            sc.backgroundColor = UIColor.clear
             
-            if firoriginY > layout.naviHeight+2 && firindexPath.section == 0{
-                firresuab.tabBarView.hidden = true
-                firresuab.backgroundColor = UIColor.whiteColor()
+            if firoriginY > layout.naviHeight+2 && (firindexPath as NSIndexPath).section == 0{
+                firresuab.tabBarView.isHidden = true
+                firresuab.backgroundColor = UIColor.white
             }
         }
     }

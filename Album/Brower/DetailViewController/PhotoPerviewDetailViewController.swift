@@ -11,7 +11,7 @@ import Photos
 
 class PhotoPerviewDetailViewController: UIViewController {
     
-    var pageIndex:NSIndexPath!
+    var pageIndex:IndexPath!
     
     var asset:PHAsset!
     
@@ -21,8 +21,8 @@ class PhotoPerviewDetailViewController: UIViewController {
     var videoplayer:AVPlayer!
     var videoItem:AVPlayerItem!
     
-    private var pan:UIPanGestureRecognizer!
-    private var pinch:UIPinchGestureRecognizer!
+    fileprivate var pan:UIPanGestureRecognizer!
+    fileprivate var pinch:UIPinchGestureRecognizer!
     
     var imageTap:UITapGestureRecognizer!
     
@@ -30,7 +30,7 @@ class PhotoPerviewDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(asset:PHAsset,pageIndex:NSIndexPath,imageTap:UITapGestureRecognizer){
+    init(asset:PHAsset,pageIndex:IndexPath,imageTap:UITapGestureRecognizer){
 
         super.init(nibName: nil, bundle: nil)
         
@@ -38,11 +38,11 @@ class PhotoPerviewDetailViewController: UIViewController {
         self.pageIndex = pageIndex
         self.imageTap = imageTap
         
-        self.view.backgroundColor = UIColor.clearColor()
+        self.view.backgroundColor = UIColor.clear
         self.automaticallyAdjustsScrollViewInsets = false
         
         self.scrollView = UIScrollView(frame: self.view.bounds)
-        self.scrollView.autoresizingMask = [.FlexibleWidth,.FlexibleHeight,.FlexibleTopMargin,.FlexibleLeftMargin,.FlexibleRightMargin,.FlexibleBottomMargin]
+        self.scrollView.autoresizingMask = [.flexibleWidth,.flexibleHeight,.flexibleTopMargin,.flexibleLeftMargin,.flexibleRightMargin,.flexibleBottomMargin]
         self.scrollView.delegate = self
         self.scrollView.tag = 406
         self.scrollView.maximumZoomScale = 3
@@ -55,24 +55,24 @@ class PhotoPerviewDetailViewController: UIViewController {
         self.scrollView.addGestureRecognizer(self.pinch)
 
         self.imageView = UIImageView(frame: self.view.bounds)
-        self.imageView.autoresizingMask = [.FlexibleWidth,.FlexibleHeight,.FlexibleTopMargin,.FlexibleLeftMargin,.FlexibleRightMargin,.FlexibleBottomMargin]
-        self.imageView.contentMode = .ScaleAspectFit
+        self.imageView.autoresizingMask = [.flexibleWidth,.flexibleHeight,.flexibleTopMargin,.flexibleLeftMargin,.flexibleRightMargin,.flexibleBottomMargin]
+        self.imageView.contentMode = .scaleAspectFit
         self.imageView.clipsToBounds = true
         self.imageView.tag = 506
         self.scrollView.addSubview(self.imageView)
         
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(PhotoPerviewDetailViewController.doubleTapActionBlock(_:)))
         doubleTap.numberOfTapsRequired = 2
-        self.imageView.userInteractionEnabled = true
+        self.imageView.isUserInteractionEnabled = true
         self.imageView.addGestureRecognizer(doubleTap)
 
-        imageTap.requireGestureRecognizerToFail(doubleTap)
+        imageTap.require(toFail: doubleTap)
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+        DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default).async(execute: {
             
             AttributedStringLoader.sharedLoader.asyncImageByAsset(self.asset, cache: false, size: PHImageManagerMaximumSize, finish: { (image) in
                 
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async(execute: {
                     
                     self.imageView.image = image
                     
@@ -90,26 +90,26 @@ class PhotoPerviewDetailViewController: UIViewController {
      
      - parameter recongnizer: 动作
      */
-    func pinchActionBlock(recognizer:UIPinchGestureRecognizer) {
+    func pinchActionBlock(_ recognizer:UIPinchGestureRecognizer) {
   
     }
     
-    func imageTapActionBlock(gestureRecognizer:UIGestureRecognizer){
+    func imageTapActionBlock(_ gestureRecognizer:UIGestureRecognizer){
         self.setNeedsStatusBarAppearanceUpdate()
-        self.prefersStatusBarHidden()
+        self.prefersStatusBarHidden
         self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
-    func doubleTapActionBlock(gestureRecognizer:UIGestureRecognizer){
+    func doubleTapActionBlock(_ gestureRecognizer:UIGestureRecognizer){
         if self.scrollView.zoomScale > self.scrollView.minimumZoomScale {
             self.scrollView.setZoomScale(self.scrollView.minimumZoomScale, animated: true)
         } else {
-            let touchPoint = gestureRecognizer.locationInView(self.imageView)
-            self.scrollView.zoomToRect(self.zoomRectForScrollViewWith(self.scrollView.maximumZoomScale, touchPoint: touchPoint), animated: true)
+            let touchPoint = gestureRecognizer.location(in: self.imageView)
+            self.scrollView.zoom(to: self.zoomRectForScrollViewWith(self.scrollView.maximumZoomScale, touchPoint: touchPoint), animated: true)
         }
     }
     
-    func zoomRectForScrollViewWith(scale: CGFloat, touchPoint: CGPoint) -> CGRect {
+    func zoomRectForScrollViewWith(_ scale: CGFloat, touchPoint: CGPoint) -> CGRect {
         let w = self.scrollView.frame.size.width / scale
         let h = self.scrollView.frame.size.height / scale
         let x = touchPoint.x - (w / 2.0)
@@ -133,13 +133,13 @@ class PhotoPerviewDetailViewController: UIViewController {
         let minScale: CGFloat = min(xScale, yScale)
         var maxScale: CGFloat!
         
-        let scale = UIScreen.mainScreen().scale
-        let deviceScreenWidth = UIScreen.mainScreen().bounds.width * scale // width in pixels. scale needs to remove if to use the old algorithm
-        let deviceScreenHeight = UIScreen.mainScreen().bounds.height * scale // height in pixels. scale needs to remove if to use the old algorithm
+        let scale = UIScreen.main.scale
+        let deviceScreenWidth = UIScreen.main.bounds.width * scale // width in pixels. scale needs to remove if to use the old algorithm
+        let deviceScreenHeight = UIScreen.main.bounds.height * scale // height in pixels. scale needs to remove if to use the old algorithm
         
         if self.imageView.frame.width < deviceScreenWidth {
             // I think that we should to get coefficient between device screen width and image width and assign it to maxScale. I made two mode that we will get the same result for different device orientations.
-            if UIApplication.sharedApplication().statusBarOrientation.isPortrait {
+            if UIApplication.shared.statusBarOrientation.isPortrait {
                 maxScale = deviceScreenHeight / self.imageView.frame.width
             } else {
                 maxScale = deviceScreenWidth / self.imageView.frame.width
@@ -180,7 +180,7 @@ class PhotoPerviewDetailViewController: UIViewController {
         // vertical
         frameToCenter.origin.y = frameToCenter.size.height < boundsSize.height ? floor((boundsSize.height - frameToCenter.size.height) / 2) : 0
         // Center
-        if !CGRectEqualToRect(self.imageView.frame, frameToCenter) {
+        if !self.imageView.frame.equalTo(frameToCenter) {
             self.imageView.frame = frameToCenter
         }
     }
@@ -189,15 +189,15 @@ class PhotoPerviewDetailViewController: UIViewController {
 extension PhotoPerviewDetailViewController : UIScrollViewDelegate{
 
     // MARK: - UIScrollViewDelegate
-    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
     
-    func scrollViewWillBeginZooming(scrollView: UIScrollView, withView view: UIView?) {
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
         //        photoBrowser?.cancelControlHiding()
     }
     
-    func scrollViewDidZoom(scrollView: UIScrollView) {
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
         
         
         self.centerImageView()
@@ -207,7 +207,7 @@ extension PhotoPerviewDetailViewController : UIScrollViewDelegate{
     }
     
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
 //        print(scrollView.contentOffset.x)
     }

@@ -147,9 +147,9 @@
 		AEDF78891CCE242700FACFCB /* Album */ = {
 			isa = PBXGroup;
 			children = (
+				AEDEFE971CCF14C00042F75F /* Moment */,
 				AE4EB0151D5D74D600523A48 /* SmartAlbum */,
 				AED6A0F81D5B3B4D00A6CFD5 /* Brower */,
-				AEDEFE971CCF14C00042F75F /* Moment */,
 				AEDF788A1CCE242700FACFCB /* AppDelegate.swift */,
 				AEDF788C1CCE242700FACFCB /* InspectionViewController.swift */,
 				AEDF788E1CCE242700FACFCB /* Main.storyboard */,
@@ -225,6 +225,7 @@
 					AEDF78861CCE242700FACFCB = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = CAY8P2B9Z3;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -452,6 +453,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = aimobier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -468,6 +470,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = aimobier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

@@ -21,50 +21,26 @@ class SmartAlbumViewController: UIViewController {
         
         self.tableView.estimatedRowHeight = 84
         
-        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
+        PHPhotoLibrary.shared().register(self)
         
         self.reloadTableViewDataSource()
     }
     
-    private func reloadTableViewDataSource(){
+    fileprivate func reloadTableViewDataSource(){
         
         let sortOptions = PHFetchOptions()
         
         sortOptions.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: true)]
         
         
-        let SmartAlbumResults = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.SmartAlbum, subtype: PHAssetCollectionSubtype.Any, options: sortOptions)
-        let AlbumResults = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.Album, subtype: PHAssetCollectionSubtype.Any, options: sortOptions)
+        let SmartAlbumResults = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.any, options: sortOptions)
+        let AlbumResults = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype: PHAssetCollectionSubtype.any, options: sortOptions)
         
-        guard let CopyAlbumResults = AlbumResults.objectsAtIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: AlbumResults.count))) as? [PHAssetCollection] else { return }
-        guard let CopySmartAlbumResults = SmartAlbumResults.objectsAtIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: SmartAlbumResults.count))) as? [PHAssetCollection] else { return }
+        let CopyAlbumResults = AlbumResults.objects(at: IndexSet(integersIn: NSRange(location: 0, length: AlbumResults.count).toRange() ?? 0..<0)).filter({ $0.photosCount > 0 })
+        let CopySmartAlbumResults = SmartAlbumResults.objects(at: IndexSet(integersIn: NSRange(location: 0, length: SmartAlbumResults.count).toRange() ?? 0..<0)).filter({ $0.photosCount > 0 })
         
         let newResults = NSMutableArray(array: CopySmartAlbumResults)
-        newResults.addObjectsFromArray(CopyAlbumResults)
-        
-        AlbumResults.enumerateObjectsUsingBlock { (coll, _, _) in
-            
-            if let collection = coll as? PHAssetCollection{
-                
-                if collection.photosCount <= 0 && newResults.containsObject(collection){
-                    
-                    newResults.removeObject(collection)
-                }
-            }
-        }
-        
-        SmartAlbumResults.enumerateObjectsUsingBlock { (coll, _, _) in
-            
-            if let collection = coll as? PHAssetCollection{
-                
-                if collection.assetCollectionSubtype == .SmartAlbumRecentlyAdded || (collection.photosCount <= 0 && newResults.containsObject(collection)){
-                
-                    newResults.removeObject(collection)
-                }
-            }
-        }
-        
-
+        newResults.addObjects(from: CopyAlbumResults)
         
         self.FetchResult = newResults
         
@@ -74,9 +50,9 @@ class SmartAlbumViewController: UIViewController {
 
 extension SmartAlbumViewController : PHPhotoLibraryChangeObserver{
     
-    func photoLibraryDidChange(changeInstance: PHChange) {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             
             self.reloadTableViewDataSource()
         }
@@ -85,16 +61,16 @@ extension SmartAlbumViewController : PHPhotoLibraryChangeObserver{
 
 extension SmartAlbumViewController:UITableViewDataSource{
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.FetchResult.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("albumcell") as! AlbumTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "albumcell") as! AlbumTableViewCell
         
-        if let collection = self.FetchResult.objectAtIndex(indexPath.row) as? PHAssetCollection{
+        if let collection = self.FetchResult.object(at: (indexPath as NSIndexPath).row) as? PHAssetCollection{
         
             cell.setAssetCollection(collection)
         }
@@ -106,9 +82,9 @@ extension SmartAlbumViewController:UITableViewDataSource{
 
 extension SmartAlbumViewController:UITableViewDelegate{
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if let collection = self.FetchResult.objectAtIndex(indexPath.row) as? PHAssetCollection{
+        if let collection = self.FetchResult.object(at: (indexPath as NSIndexPath).row) as? PHAssetCollection{
             
             let viewController = self.getSmartDetailViewController(collection)
             
@@ -117,9 +93,9 @@ extension SmartAlbumViewController:UITableViewDelegate{
     }
     
     
-    private func getSmartDetailViewController(collection:PHAssetCollection) -> SmartDetailViewController{
+    fileprivate func getSmartDetailViewController(_ collection:PHAssetCollection) -> SmartDetailViewController{
     
-        let viewController = self.storyboard?.instantiateViewControllerWithIdentifier("SmartDetailViewController") as! SmartDetailViewController
+        let viewController = self.storyboard?.instantiateViewController(withIdentifier: "SmartDetailViewController") as! SmartDetailViewController
         
         viewController.AssetCollection = collection
         

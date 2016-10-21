@@ -1,0 +1,12 @@
+# 忽略所有的Pods 文件夹下的
+/Pods/*
+
+# 忽略
+Podfile.lock
+
+# 忽略 Max OS 的默认文件
+.DS_Store
+
+*.xcworkspace
+
+.idea

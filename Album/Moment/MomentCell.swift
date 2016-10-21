@@ -16,32 +16,33 @@ class MomentCell:UICollectionViewCell{
     
     @IBOutlet var imageView: UIImageView!
     
-    func setPHAsset(imageManager:PHImageManager = PHImageManager.defaultManager(),asset:PHAsset){
+    func setPHAsset(_ imageManager:PHImageManager = PHImageManager.default(),asset:PHAsset){
     
         let size = self.frame.size.CGSizeScale(1)
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
             
             let image =  AttributedStringLoader.sharedLoader.syncImageByAsset(asset,cache: false, imageManager: imageManager, size: size)
             
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 
                 self.imageView.image = image
             })
-        })
+        }
+
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,Int64(0.1 * Double(NSEC_PER_SEC))),dispatch_get_main_queue(), {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
             
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
                 
                 AttributedStringLoader.sharedLoader.asyncImageByAsset(asset,cache: false, size: self.frame.size.CGSizeScale(), finish: { (image) in
                     
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         
                         self.imageView.image = image
                     })
                 })
-            })
+            }
         })
     }
 }
@@ -51,14 +52,14 @@ class CountReusableView:UICollectionReusableView{
     
     @IBOutlet var countlabel: UILabel!
     
-    
-    func setPHAssetCollection(fetchResult:PHFetchResult?=nil){
+    func setPHAssetCollection(_ fetchResult:PHFetchResult<PHAssetCollection>?=nil){
         
         var string = ""
         
-        let imageCount = (fetchResult ?? PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Image, options: nil)).countOfAssetsWithMediaType(PHAssetMediaType.Image)
-        let videoCount = (fetchResult ?? PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Video, options: nil)).countOfAssetsWithMediaType(PHAssetMediaType.Video)
-        let audioCount = (fetchResult ?? PHAsset.fetchAssetsWithMediaType(PHAssetMediaType.Audio, options: nil)).countOfAssetsWithMediaType(PHAssetMediaType.Audio)
+        let imageCount = fetchResult?.countOfAssets(with: .image) ?? PHAsset.fetchAssets(with: PHAssetMediaType.image, options: nil).countOfAssets(with: .image)
+        let videoCount = fetchResult?.countOfAssets(with: .image) ?? PHAsset.fetchAssets(with: PHAssetMediaType.image, options: nil).countOfAssets(with: .video)
+        let audioCount = fetchResult?.countOfAssets(with: .image) ?? PHAsset.fetchAssets(with: PHAssetMediaType.image, options: nil).countOfAssets(with: .audio)
+        
         if imageCount > 0 { string += "\(imageCount)张照片" }
         if videoCount > 0 { string += " \(videoCount)个视频" }
         if audioCount > 0 { string += " \(audioCount)个音频" }
@@ -70,7 +71,7 @@ class CountReusableView:UICollectionReusableView{
 //MARK:  UICollectionReusableView
 class MomentReusableView:UICollectionReusableView{
     
-    var indexPath:NSIndexPath!
+    var indexPath:IndexPath!
     
     @IBOutlet var tabBarView: UITabBar!
     
@@ -78,23 +79,23 @@ class MomentReusableView:UICollectionReusableView{
     @IBOutlet var RightDescLabel: UILabel!
     
     
-    func setPHAssetCollection(collection:PHAssetCollection){
+    func setPHAssetCollection(_ collection:PHAssetCollection){
         
-        self.RightDescLabel.hidden = true
-        self.LeftDescLabel.hidden = true
+        self.RightDescLabel.isHidden = true
+        self.LeftDescLabel.isHidden = true
         
         guard let location = collection.approximateLocation else {
             
-            self.LeftDescLabel.hidden = false
+            self.LeftDescLabel.isHidden = false
             return self.LeftDescLabel.text = collection.startDate?.PictureCreateTimeStr()
         }
         
-        self.RightDescLabel.hidden = false
+        self.RightDescLabel.isHidden = false
         self.RightDescLabel.text = collection.startDate?.PictureCreateTimeStr()
         
         GeocoderLocationLoader.sharedLoader.locationStr(location) { (location, locationStr) in
             
-            self.LeftDescLabel.hidden = false
+            self.LeftDescLabel.isHidden = false
             self.LeftDescLabel.text = locationStr
         }
     }
@@ -103,31 +104,22 @@ class MomentReusableView:UICollectionReusableView{
 //MARK:  地理位置缓存器
 class GeocoderLocationLoader {
     
-    lazy var cache = NSCache()
+    lazy var cache = NSCache<AnyObject,AnyObject>()
     
-    class var sharedLoader:GeocoderLocationLoader!{
-        get{
-            struct backTaskLeton{
-                static var predicate:dispatch_once_t = 0
-                static var instance:GeocoderLocationLoader? = nil
-            }
-            dispatch_once(&backTaskLeton.predicate, { () -> Void in
-                backTaskLeton.instance = GeocoderLocationLoader()
-            })
-            return backTaskLeton.instance
-        }
-    }
+    static let sharedLoader = GeocoderLocationLoader()
     
-    func locationStr(location:CLLocation,completionHandler:((location:CLLocation,locationStr:String)->())){
+    func locationStr(_ location:CLLocation,completionHandler:@escaping ((_ location:CLLocation,_ locationStr:String)->())){
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {()in
+        
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
+            
             let key = "\(location.coordinate.latitude) - \(location.coordinate.longitude)"
             
-            let locationStr = self.cache.objectForKey(key) as? String
+            let locationStr = self.cache.object(forKey: key as AnyObject) as? String
             
             if let loca = locationStr {
-                dispatch_async(dispatch_get_main_queue(), {() in
-                    completionHandler(location: location, locationStr: loca)
+                DispatchQueue.main.async(execute: {() in
+                    completionHandler(location, loca)
                 })
                 return
             }
@@ -139,14 +131,14 @@ class GeocoderLocationLoader {
                     
                     let locati = placemark[0] as CLPlacemark
                     
-                    let value = "\(locati.locality!) - \(locati.subLocality!) "
-                    self.cache.setObject(value, forKey: key)
-                    dispatch_async(dispatch_get_main_queue(), {() in
-                        completionHandler(location: location, locationStr: value)
+                    let value = (locati.locality ?? "未知") + (locati.subLocality ?? "未知")
+                    
+                    self.cache.setObject(value as AnyObject, forKey: key as AnyObject)
+                    DispatchQueue.main.async(execute: {() in
+                        completionHandler(location, value)
                     })
                 }
             })
-            
-        })
+        }
     }
 }

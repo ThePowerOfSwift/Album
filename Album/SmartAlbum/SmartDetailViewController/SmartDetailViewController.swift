@@ -11,6 +11,8 @@ import Photos
 
 class SmartDetailViewController: BaseAlbumViewController {
     
+    var FetchResult:PHFetchResult<PHAsset>!
+    
     var AssetCollection:PHAssetCollection!
     
     override func viewDidLoad() {
@@ -23,14 +25,14 @@ class SmartDetailViewController: BaseAlbumViewController {
         
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         
-        self.FetchResult = PHAsset.fetchAssetsInAssetCollection(self.AssetCollection, options: fetchOptions)
+        self.FetchResult = PHAsset.fetchAssets(in: self.AssetCollection, options: fetchOptions)
         
-        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
+        PHPhotoLibrary.shared().register(self)
     }
     
-    private var isFirst = true
+    fileprivate var isFirst = true
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
         
@@ -38,23 +40,23 @@ class SmartDetailViewController: BaseAlbumViewController {
         
         isFirst = false
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             
             self.collectionView.scrollToBottom(false)
         }
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        super.viewWillTransition(to: size, with: coordinator)
         
-        if let indexPath = self.collectionView.indexPathsForVisibleItems().last {
+        if let indexPath = self.collectionView.indexPathsForVisibleItems.last {
             
-            coordinator.animateAlongsideTransition({ (_) in
+            coordinator.animate(alongsideTransition: { (_) in
                 
                 self.collectionView.collectionViewLayout.invalidateLayout()
                 
-                self.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.Bottom, animated: false)
+                self.collectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.bottom, animated: false)
                 
                 }, completion: nil)
         }
@@ -64,9 +66,9 @@ class SmartDetailViewController: BaseAlbumViewController {
 
 extension SmartDetailViewController : PHPhotoLibraryChangeObserver{
     
-    func photoLibraryDidChange(changeInstance: PHChange) {
-        dispatch_async(dispatch_get_main_queue()) {
-            guard let collectionChanges = changeInstance.changeDetailsForFetchResult(self.FetchResult) else { return }
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        DispatchQueue.main.async {
+            guard let collectionChanges = changeInstance.changeDetails(for: self.FetchResult) else { return }
             
             self.FetchResult = collectionChanges.fetchResultAfterChanges
             
@@ -77,17 +79,17 @@ extension SmartDetailViewController : PHPhotoLibraryChangeObserver{
                 self.collectionView.performBatchUpdates({
                     let removedIndexes = collectionChanges.removedIndexes
                     if (removedIndexes?.count ?? 0) != 0 {
-                        self.collectionView.deleteItemsAtIndexPaths(removedIndexes!.map{NSIndexPath(forItem: $0, inSection: 0)})
+                        self.collectionView.deleteItems(at: removedIndexes!.map{IndexPath(item: $0, section: 0)})
                     }
                     
                     let insertedIndexes = collectionChanges.insertedIndexes
                     if (insertedIndexes?.count ?? 0) != 0 {
-                        self.collectionView.insertItemsAtIndexPaths(insertedIndexes!.map{NSIndexPath(forItem: $0, inSection: 0)})
+                        self.collectionView.insertItems(at: insertedIndexes!.map{IndexPath(item: $0, section: 0)})
                     }
                     
                     let changedIndexes = collectionChanges.changedIndexes
                     if (changedIndexes?.count ?? 0) != 0 {
-                        self.collectionView.reloadItemsAtIndexPaths(changedIndexes!.map{NSIndexPath(forItem: $0, inSection: 0)})
+                        self.collectionView.reloadItems(at: changedIndexes!.map{IndexPath(item: $0, section: 0)})
                     }
                     
                     }, completion: nil)
@@ -100,40 +102,39 @@ extension SmartDetailViewController : PHPhotoLibraryChangeObserver{
 //MARK: --- UICollectionViewDataSource
 extension SmartDetailViewController:UICollectionViewDataSource{
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return self.FetchResult.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath) as! MomentCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! MomentCell
         
-        if let asset = self.FetchResult.objectAtIndex(indexPath.item) as? PHAsset{
+        let asset = self.FetchResult.object(at: (indexPath as NSIndexPath).item)
             
-            cell.setPHAsset(asset: asset)
-        }
+        cell.setPHAsset(asset: asset)
         
-        if (self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available) {
+        if (self.traitCollection.forceTouchCapability == UIForceTouchCapability.available) {
             
             if let perView = cell.viewControllerPreviewing {
             
-                self.unregisterForPreviewingWithContext(perView)
+                self.unregisterForPreviewing(withContext: perView)
             }
             
-            cell.viewControllerPreviewing =  self.registerForPreviewingWithDelegate(self, sourceView: cell)
+            cell.viewControllerPreviewing =  self.registerForPreviewing(with: self, sourceView: cell)
         }
         
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView{
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView{
         
-        if kind == UICollectionElementKindSectionFooter && indexPath.section == collectionView.numberOfSections()-1 {
+        if kind == UICollectionElementKindSectionFooter && (indexPath as NSIndexPath).section == collectionView.numberOfSections-1 {
             
-            let reusableView = collectionView.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionFooter, withReuseIdentifier: "countview", forIndexPath: indexPath) as! CountReusableView
+            let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionFooter, withReuseIdentifier: "countview", for: indexPath) as! CountReusableView
             
-            reusableView.setPHAssetCollection(self.FetchResult)
+            reusableView.setPHAssetCollection()
             
             return reusableView
         }
@@ -146,9 +147,9 @@ extension SmartDetailViewController:UICollectionViewDataSource{
 //MARK: --- UICollectionViewDelegateFlowLayout
 extension SmartDetailViewController:UICollectionViewDelegateFlowLayout{
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         
-        let ScreenSize = UIScreen.mainScreen().bounds.size
+        let ScreenSize = UIScreen.main.bounds.size
         
         let ScreenWidth = ScreenSize.width > ScreenSize.height ? ScreenSize.height : ScreenSize.width
         
@@ -156,33 +157,33 @@ extension SmartDetailViewController:UICollectionViewDelegateFlowLayout{
         
         return CGSize(width: CellWidth, height: CellWidth)
     }
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets{
         
-        return UIEdgeInsetsZero
+        return UIEdgeInsets.zero
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat{
         
         return 0.5
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat{
         
         return 0.5
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
         
-        return CGSizeZero
+        return CGSize.zero
     }
     
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize{
         
-        if section == collectionView.numberOfSections()-1 {
+        if section == collectionView.numberOfSections-1 {
             
             return CGSize(width: 0, height: 80)
         }
-        return CGSizeZero
+        return CGSize.zero
     }
 }
 
@@ -190,31 +191,31 @@ extension SmartDetailViewController:UICollectionViewDelegateFlowLayout{
 //MARK: --- UICollectionViewDelegate
 extension SmartDetailViewController:UICollectionViewDelegate,UIViewControllerPreviewingDelegate{
     
-    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         
         self.navigationController?.pushViewController(viewControllerToCommit, animated: false)
     }
     
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         
-        if let cell = previewingContext.sourceView as? MomentCell,indexPath = self.collectionView.indexPathForCell(cell){
+        if let cell = previewingContext.sourceView as? MomentCell,let indexPath = self.collectionView.indexPath(for: cell){
             
             let viewController = PhotoPerviewViewController(pageIndex: indexPath, momentViewController: self)
             
             viewController.isMoments = false
             
-            if let asset = self.FetchResult.objectAtIndex(indexPath.item) as? PHAsset{
+            if let asset = self.FetchResult.object(at: (indexPath as NSIndexPath).item) as? PHAsset{
                 
                 if asset.pixelWidth > asset.pixelHeight {
                     
-                    let height = CGFloat(asset.pixelHeight)/(CGFloat(asset.pixelWidth)/UIScreen.mainScreen().bounds.width)
+                    let height = CGFloat(asset.pixelHeight)/(CGFloat(asset.pixelWidth)/UIScreen.main.bounds.width)
                     
-                    viewController.preferredContentSize = CGSize(width: UIScreen.mainScreen().bounds.width, height: height)
+                    viewController.preferredContentSize = CGSize(width: UIScreen.main.bounds.width, height: height)
                 }else{
                     
-                    let width = CGFloat(asset.pixelWidth)/(CGFloat(asset.pixelHeight)/UIScreen.mainScreen().bounds.height)
+                    let width = CGFloat(asset.pixelWidth)/(CGFloat(asset.pixelHeight)/UIScreen.main.bounds.height)
                     
-                    viewController.preferredContentSize = CGSize(width: width, height: UIScreen.mainScreen().bounds.height)
+                    viewController.preferredContentSize = CGSize(width: width, height: UIScreen.main.bounds.height)
                 }
             }
             
@@ -223,7 +224,7 @@ extension SmartDetailViewController:UICollectionViewDelegate,UIViewControllerPre
         return nil
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let viewController = PhotoPerviewViewController(pageIndex: indexPath, momentViewController: self)
         

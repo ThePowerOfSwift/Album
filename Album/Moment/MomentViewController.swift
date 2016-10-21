@@ -11,8 +11,9 @@ import Photos
 
 class MomentViewController: BaseAlbumViewController {
     
+    var FetchResult:PHFetchResult<PHAssetCollection>!
     
-    var previousPreheatRect = CGRectZero
+    var previousPreheatRect = CGRect.zero
     var imageManager:PHCachingImageManager!
     
     override func viewDidLoad() {
@@ -25,14 +26,14 @@ class MomentViewController: BaseAlbumViewController {
         
         sortOptions.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: true)]
         
-        self.FetchResult = PHAssetCollection.fetchAssetCollectionsWithType(PHAssetCollectionType.Moment, subtype: PHAssetCollectionSubtype.Any, options: sortOptions)
+        self.FetchResult = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.moment, subtype: PHAssetCollectionSubtype.any, options: sortOptions)
         
-        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self)
+        PHPhotoLibrary.shared().register(self)
     }
     
-    private var isFirst = true
+    fileprivate var isFirst = true
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
         
@@ -40,25 +41,25 @@ class MomentViewController: BaseAlbumViewController {
         
         isFirst = false
         
-        dispatch_async(dispatch_get_main_queue()) { 
+        DispatchQueue.main.async { 
             
             self.collectionView.scrollToBottom(false)
         }
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        super.viewWillTransition(to: size, with: coordinator)
         
-        if let indexPath = self.collectionView.indexPathsForVisibleItems().last,layout = self.collectionView.collectionViewLayout as? MomentCollectionLayout {
+        if let indexPath = self.collectionView.indexPathsForVisibleItems.last,let layout = self.collectionView.collectionViewLayout as? MomentCollectionLayout {
         
             layout.naviHeight = size.width > size.height  ? 44 : 64
             
-            coordinator.animateAlongsideTransition({ (_) in
+            coordinator.animate(alongsideTransition: { (_) in
                 
                 self.collectionView.collectionViewLayout.invalidateLayout()
                 
-                self.collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: UICollectionViewScrollPosition.Bottom, animated: false)
+                self.collectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.bottom, animated: false)
                 
                 }, completion: nil)
         }
@@ -69,9 +70,9 @@ class MomentViewController: BaseAlbumViewController {
 
 extension MomentViewController : PHPhotoLibraryChangeObserver{
 
-    func photoLibraryDidChange(changeInstance: PHChange) {
-        dispatch_async(dispatch_get_main_queue()) {
-            guard let collectionChanges = changeInstance.changeDetailsForFetchResult(self.FetchResult) else { return }
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        DispatchQueue.main.async {
+            guard let collectionChanges = changeInstance.changeDetails(for: self.FetchResult) else { return }
             
             self.FetchResult = collectionChanges.fetchResultAfterChanges
             

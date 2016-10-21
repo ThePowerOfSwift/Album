@@ -10,7 +10,7 @@ import Photos
 
 extension CGSize{
     
-    func CGSizeScale(scale:CGFloat = UIScreen.mainScreen().scale) -> CGSize{
+    func CGSizeScale(_ scale:CGFloat = UIScreen.main.scale) -> CGSize{
         
         return CGSize(width: self.width*scale, height: self.height*scale)
     }
@@ -20,20 +20,9 @@ extension CGSize{
 /// 属性字符串 缓存器
 class AttributedStringLoader {
     
-    lazy var cache = NSCache()
+    let cache = NSCache<AnyObject,AnyObject>()
     
-    class var sharedLoader:AttributedStringLoader!{
-        get{
-            struct backTaskLeton{
-                static var predicate:dispatch_once_t = 0
-                static var instance:AttributedStringLoader? = nil
-            }
-            dispatch_once(&backTaskLeton.predicate, { () -> Void in
-                backTaskLeton.instance = AttributedStringLoader()
-            })
-            return backTaskLeton.instance
-        }
-    }
+    static let sharedLoader:AttributedStringLoader = AttributedStringLoader()
     
     /**
      根据提供的String 继而 同步的方式 提取图片 并且返回
@@ -43,23 +32,23 @@ class AttributedStringLoader {
      
      - returns: 返回属性字符串
      */
-    func syncImageByAsset(asset:PHAsset,cache:Bool=true,imageManager:PHImageManager = PHImageManager.defaultManager(),size:CGSize) -> UIImage {
+    func syncImageByAsset(_ asset:PHAsset,cache:Bool=true,imageManager:PHImageManager = PHImageManager.default(),size:CGSize) -> UIImage {
         
         if cache {
             
-            if let image = self.cache.objectForKey(asset) as? UIImage { return image }
+            if let image = self.cache.object(forKey: asset) as? UIImage { return image }
         }
         
         let options = PHImageRequestOptions()
-        options.synchronous = true
-        options.deliveryMode = PHImageRequestOptionsDeliveryMode.HighQualityFormat
-        options.networkAccessAllowed = true
-        options.resizeMode = PHImageRequestOptionsResizeMode.Exact
-        options.deliveryMode = PHImageRequestOptionsDeliveryMode.Opportunistic
+        options.isSynchronous = true
+        options.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
+        options.isNetworkAccessAllowed = true
+        options.resizeMode = PHImageRequestOptionsResizeMode.exact
+        options.deliveryMode = PHImageRequestOptionsDeliveryMode.opportunistic
         
         var image:UIImage!
         
-        imageManager.requestImageForAsset(asset, targetSize: size, contentMode: PHImageContentMode.AspectFill, options: options) { (resimg, info) in
+        imageManager.requestImage(for: asset, targetSize: size, contentMode: PHImageContentMode.aspectFill, options: options) { (resimg, info) in
             
             image = resimg
         }
@@ -79,21 +68,21 @@ class AttributedStringLoader {
      
      - returns: 返回属性字符串
      */
-    func asyncImageByAsset(asset:PHAsset,cache:Bool=true,imageManager:PHImageManager = PHImageManager.defaultManager(),size:CGSize,finish:((image:UIImage)->Void)) {
+    func asyncImageByAsset(_ asset:PHAsset,cache:Bool=true,imageManager:PHImageManager = PHImageManager.default(),size:CGSize,finish:@escaping ((_ image:UIImage)->Void)) {
         
         if cache {
             
-            if let image = self.cache.objectForKey(asset) as? UIImage { return finish(image: image) }
+            if let image = self.cache.object(forKey: asset) as? UIImage { return finish(image) }
         }
         
         let options = PHImageRequestOptions()
-        options.synchronous = true
-        options.deliveryMode = PHImageRequestOptionsDeliveryMode.HighQualityFormat
-        options.networkAccessAllowed = true
-        options.resizeMode = PHImageRequestOptionsResizeMode.Exact
-        options.deliveryMode = PHImageRequestOptionsDeliveryMode.Opportunistic
+        options.isSynchronous = true
+        options.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
+        options.isNetworkAccessAllowed = true
+        options.resizeMode = PHImageRequestOptionsResizeMode.exact
+        options.deliveryMode = PHImageRequestOptionsDeliveryMode.opportunistic
         
-        imageManager.requestImageForAsset(asset, targetSize: size, contentMode: PHImageContentMode.AspectFill, options: options) { (resimg, info) in
+        imageManager.requestImage(for: asset, targetSize: size, contentMode: PHImageContentMode.aspectFill, options: options) { (resimg, info) in
             
             if let image = resimg {
                 if cache {
@@ -101,7 +90,7 @@ class AttributedStringLoader {
                     self.cache.setObject(image, forKey: asset)
                 }
                 
-                finish(image: image)
+                finish(image)
             }
         }
     }
